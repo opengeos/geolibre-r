@@ -8,5 +8,6 @@
 ^docs$
 ^pkgdown$
 ^vignettes/articles$
+^benchmarks$
 ^.*\.Rproj$
 ^\.Rproj\.user$

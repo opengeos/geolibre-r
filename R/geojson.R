@@ -166,6 +166,65 @@ point_feature <- function(lng, lat, properties = NULL) {
   )
 }
 
+# The one place either path in `add_xy_data()` reports an unusable coordinate
+# pair, so the two cannot report the same failure differently.
+stop_invalid_coordinates <- function(index) {
+  stop_geolibre("Row ", index, " has invalid coordinates.")
+}
+
+# Parse and validate one row's coordinate pair, for the general row-wise path in
+# `add_xy_data()` where a row's values come from a list and can have any length.
+parse_point_coordinates <- function(x, y, index) {
+  coordinates <- suppressWarnings(as.numeric(c(x, y)))
+  if (length(coordinates) != 2L || any(!is.finite(coordinates))) {
+    stop_invalid_coordinates(index)
+  }
+  coordinates
+}
+
+# Build point features directly from ordinary data-frame columns. This avoids
+# constructing a one-row data frame and converting it to a list for every
+# observation. Irregular columns (list or matrix columns) retain the general
+# row-wise path in `add_xy_data()` so their existing shape semantics stay intact.
+data_frame_point_features <- function(data, x, y) {
+  if (!nrow(data)) return(list())
+  if (!(x %in% names(data)) || !(y %in% names(data))) {
+    # A missing column is missing from every row, so the general row-wise path
+    # always fails on row 1. The index is hardcoded to keep the message
+    # identical to the one that path raises.
+    stop_geolibre(
+      "Row 1 is missing coordinate columns \"", x, "\" and/or \"", y, "\"."
+    )
+  }
+  property_names <- setdiff(names(data), c(x, y))
+  # Pull the columns with `[[` rather than `data[property_names]`: single-bracket
+  # column selection is not what every data.frame subclass means by it (a
+  # data.table reads a character `i` as a row filter).
+  property_columns <- lapply(property_names, function(name) data[[name]])
+  names(property_columns) <- property_names
+  # The coordinate columns are atomic vectors here, so coerce and check them
+  # once for the whole frame rather than establishing a `suppressWarnings()`
+  # handler and coercing per row.
+  x_values <- suppressWarnings(as.numeric(data[[x]]))
+  y_values <- suppressWarnings(as.numeric(data[[y]]))
+  invalid <- which(!is.finite(x_values) | !is.finite(y_values))
+  if (length(invalid)) stop_invalid_coordinates(invalid[[1]])
+  lapply(seq_len(nrow(data)), function(index) {
+    properties <- lapply(property_columns, function(column) column[index])
+    point_feature(x_values[[index]], y_values[[index]], properties)
+  })
+}
+
+# Whether every column is an atomic vector, i.e. not a list-column and not a
+# matrix-column. Those irregular columns keep the general row-wise path.
+has_atomic_vector_columns <- function(data) {
+  all(vapply(
+    data,
+    function(column) is.atomic(column) && is.null(dim(column)),
+    logical(1)
+  ))
+}
+
 # Coerce assorted point inputs into a point FeatureCollection: anything
 # `as_featurecollection()` accepts, plus a matrix or data frame of coordinates
 # and a list of `c(lng, lat)` pairs or named `list(lng =, lat =, ...)` entries.

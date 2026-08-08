@@ -125,6 +125,48 @@ test_that("tabular sources become point layers", {
     add_csv(geolibre(), "longitude,latitude\nnot,anumber"),
     "invalid coordinates"
   )
+  frame$latitude[[2]] <- NA_real_
+  expect_error(add_xy_data(geolibre(), frame), "Row 2 has invalid coordinates")
+})
+
+test_that("ordinary data frames retain column classes on the direct point path", {
+  frame <- data.frame(
+    longitude = c(-77, -76),
+    latitude = c(39, 40),
+    category = factor(c("a", "b")),
+    date = as.Date(c("2026-01-01", "2026-01-02"))
+  )
+  features <- add_xy_data(geolibre(), frame)$x$project$layers[[1]]$geojson$features
+  expect_equal(
+    lapply(features, function(feature) feature$geometry$coordinates),
+    list(c(-77, 39), c(-76, 40))
+  )
+  expect_s3_class(features[[1]]$properties$category, "factor")
+  expect_s3_class(features[[1]]$properties$date, "Date")
+  expect_equal(features[[2]]$properties$category, factor("b", levels = c("a", "b")))
+  expect_equal(features[[2]]$properties$date, as.Date("2026-01-02"))
+})
+
+test_that("irregular data-frame columns retain the general point path", {
+  frame <- data.frame(longitude = -77, latitude = 39)
+  frame$details <- I(list(list(label = "DC")))
+  feature <- add_xy_data(geolibre(), frame)$x$project$layers[[1]]$geojson$features[[1]]
+  expect_s3_class(feature$properties$details, "AsIs")
+  expect_equal(unclass(feature$properties$details), list(list(label = "DC")))
+})
+
+test_that("the direct point path does not rely on subclass `[` semantics", {
+  # A data.table reads `data[c("a", "b")]` as a row filter rather than as column
+  # selection, so the fast path must reach columns with `[[`.
+  bracket <- function(x, ...) stop("single-bracket subsetting is not column selection")
+  methods_table <- get(".__S3MethodsTable__.", envir = baseenv())
+  registerS3method("[", "geolibre_row_filter_frame", bracket)
+  on.exit(rm("[.geolibre_row_filter_frame", envir = methods_table), add = TRUE)
+  frame <- data.frame(longitude = -77, latitude = 39, name = "DC")
+  class(frame) <- c("geolibre_row_filter_frame", "data.frame")
+  feature <- add_xy_data(geolibre(), frame)$x$project$layers[[1]]$geojson$features[[1]]
+  expect_equal(feature$geometry$coordinates, c(-77, 39))
+  expect_equal(feature$properties$name, "DC")
 })
 
 test_that("choropleths build graduated stops from the data", {
