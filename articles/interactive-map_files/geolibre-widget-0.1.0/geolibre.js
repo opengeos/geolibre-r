@@ -4,11 +4,15 @@
   const instances = new Map();
 
   // Build the embed URL. `embed=1` turns on the project bridge the widget speaks;
-  // `layout` and `theme` select the application chrome.
-  function embedUrl(base, layout, theme) {
+  // `layout`, `theme`, and `panels` select the application chrome.
+  function embedUrl(base, layout, theme, panels) {
     const url = new URL(base, window.location.href);
     url.searchParams.set("embed", "1");
     if (theme) url.searchParams.set("theme", theme);
+    // A self-hosted `app_url` may already carry `panels`; the argument wins.
+    url.searchParams.delete("panels");
+    if (panels === "collapsed") url.searchParams.set("panels", "collapsed");
+    if (panels === "hidden") url.searchParams.set("panels", "none");
     if (layout === "maponly") {
       url.searchParams.set("maponly", "1");
     } else if (layout !== "full") {
@@ -23,7 +27,7 @@
     iframe.title = "GeoLibre interactive map";
     iframe.allow = "fullscreen; clipboard-read; clipboard-write; geolocation";
     iframe.allowFullscreen = true;
-    iframe.src = embedUrl(x.appUrl, x.layout, x.theme);
+    iframe.src = embedUrl(x.appUrl, x.layout, x.theme, x.panels);
     el.replaceChildren(iframe);
     return iframe;
   }
@@ -134,7 +138,7 @@
       const instance = {
         renderValue: function (x) {
           project = x.project;
-          const signature = [x.appUrl, x.layout, x.theme].join("|");
+          const signature = [x.appUrl, x.layout, x.theme, x.panels].join("|");
           if (!iframe || iframe.dataset.signature !== signature) {
             ready = false;
             pendingCommands.length = 0;

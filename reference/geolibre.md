@@ -19,7 +19,8 @@ geolibre(
   layout = c("embed", "full", "maponly"),
   theme = c("light", "dark"),
   map_only = FALSE,
-  elementId = NULL
+  elementId = NULL,
+  panels = c("expanded", "collapsed", "hidden")
 )
 ```
 
@@ -76,6 +77,11 @@ geolibre(
 
   Optional widget element ID.
 
+- panels:
+
+  Initial side-panel state: `"expanded"`, `"collapsed"` (icon rails
+  remain available), or `"hidden"`.
+
 ## Value
 
 An `htmlwidget` that can be modified with `add_*()` functions.
@@ -102,5 +108,5 @@ stopifnot(inherits(map, "geolibre"))
 # A dark-themed map with the full application interface.
 geolibre(basemap = "dark", layout = "full")
 
-{"x":{"project":{"version":"0.2.0","name":"Untitled Project","mapView":{"center":[-100,40],"zoom":2,"bearing":0,"pitch":0},"basemapStyleUrl":"https://tiles.openfreemap.org/styles/dark","basemapVisible":true,"basemapOpacity":1,"layers":[],"styles":{},"preferences":{"map":{"restrictBounds":false,"bounds":[-180,-85,180,85],"minZoom":0,"maxZoom":24,"maxPitch":85,"renderWorldCopies":true},"environmentVariables":[]},"metadata":{}},"appUrl":"https://web.geolibre.app/","layout":"full","theme":"light"},"evals":[],"jsHooks":[]}
+{"x":{"project":{"version":"0.2.0","name":"Untitled Project","mapView":{"center":[-100,40],"zoom":2,"bearing":0,"pitch":0},"basemapStyleUrl":"https://tiles.openfreemap.org/styles/dark","basemapVisible":true,"basemapOpacity":1,"layers":[],"styles":{},"preferences":{"map":{"restrictBounds":false,"bounds":[-180,-85,180,85],"minZoom":0,"maxZoom":24,"maxPitch":85,"renderWorldCopies":true},"environmentVariables":[]},"metadata":{}},"appUrl":"https://web.geolibre.app/","layout":"full","theme":"light","panels":"expanded"},"evals":[],"jsHooks":[]}
 ```

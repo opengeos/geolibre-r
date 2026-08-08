@@ -10,6 +10,22 @@ access.
 library(geolibre)
 ```
 
+## Load a GeoLibre project
+
+A complete `.geolibre.json` project can be loaded from a URL and passed
+to [`geolibre()`](https://r.geolibre.app/reference/geolibre.md). This
+example opens a 3D map of New York City buildings and subway lines. The
+project is fetched while this page is built, so the chunk reports the
+error rather than failing the build if the host is unreachable.
+
+``` r
+
+project_url <- "https://assets.geolibre.app/projects/nyc-buildings.geolibre.json"
+nyc_buildings <- jsonlite::read_json(project_url, simplifyVector = FALSE)
+
+geolibre(nyc_buildings, panels = "collapsed")
+```
+
 ## A single point
 
 Style overrides can be passed as named arguments or through a `style`
@@ -147,8 +163,8 @@ map <- geolibre() |>
 
 get_layers(map)
 #>                                     id          name    type visible opacity
-#> 1 65d22321-8da3-41c9-8761-247145396b6b       Capital geojson    TRUE       1
-#> 2 6827d0c0-0f61-40bf-9140-73869ee26569 OpenStreetMap     xyz    TRUE       1
+#> 1 b6aaa1e2-03ff-4fb5-9fa0-cf0d2430e040       Capital geojson    TRUE       1
+#> 2 921de0dd-3a42-4676-aad0-bd56af4b77cc OpenStreetMap     xyz    TRUE       1
 #>                                           source features
 #> 1                                           <NA>        1
 #> 2 https://tile.openstreetmap.org/{z}/{x}/{y}.png       NA

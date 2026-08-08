@@ -58,7 +58,8 @@ system. The widget carries a <code>.geolibre.json</code> project, which the <cod
 <span>  layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"embed"</span>, <span class="st">"full"</span>, <span class="st">"maponly"</span><span class="op">)</span>,</span>
 <span>  theme <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"light"</span>, <span class="st">"dark"</span><span class="op">)</span>,</span>
 <span>  map_only <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  elementId <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  elementId <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  panels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"expanded"</span>, <span class="st">"collapsed"</span>, <span class="st">"hidden"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -113,6 +114,11 @@ JSON URL. Ignored when <code>project</code> is supplied, which carries its own.<
 <dt id="arg-elementid">elementId<a class="anchor" aria-label="anchor" href="#arg-elementid"></a></dt>
 <dd><p>Optional widget element ID.</p></dd>
 
+
+<dt id="arg-panels">panels<a class="anchor" aria-label="anchor" href="#arg-panels"></a></dt>
+<dd><p>Initial side-panel state: <code>"expanded"</code>, <code>"collapsed"</code> (icon
+rails remain available), or <code>"hidden"</code>.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -138,7 +144,7 @@ option to use a self-hosted deployment.</p>
 <span class="r-in"><span><span class="co"># A dark-themed map with the full application interface.</span></span></span>
 <span class="r-in"><span><span class="fu">geolibre</span><span class="op">(</span>basemap <span class="op">=</span> <span class="st">"dark"</span>, layout <span class="op">=</span> <span class="st">"full"</span><span class="op">)</span></span></span>
 <div id="htmlwidget-5b1b2f4ad92281566982" style="width:700px;height:432.632880098888px;" class="geolibre html-widget"></div>
-<script type="application/json" data-for="htmlwidget-5b1b2f4ad92281566982">{"x":{"project":{"version":"0.2.0","name":"Untitled Project","mapView":{"center":[-100,40],"zoom":2,"bearing":0,"pitch":0},"basemapStyleUrl":"https://tiles.openfreemap.org/styles/dark","basemapVisible":true,"basemapOpacity":1,"layers":[],"styles":{},"preferences":{"map":{"restrictBounds":false,"bounds":[-180,-85,180,85],"minZoom":0,"maxZoom":24,"maxPitch":85,"renderWorldCopies":true},"environmentVariables":[]},"metadata":{}},"appUrl":"https://web.geolibre.app/","layout":"full","theme":"light"},"evals":[],"jsHooks":[]}</script></code></pre></div>
+<script type="application/json" data-for="htmlwidget-5b1b2f4ad92281566982">{"x":{"project":{"version":"0.2.0","name":"Untitled Project","mapView":{"center":[-100,40],"zoom":2,"bearing":0,"pitch":0},"basemapStyleUrl":"https://tiles.openfreemap.org/styles/dark","basemapVisible":true,"basemapOpacity":1,"layers":[],"styles":{},"preferences":{"map":{"restrictBounds":false,"bounds":[-180,-85,180,85],"minZoom":0,"maxZoom":24,"maxPitch":85,"renderWorldCopies":true},"environmentVariables":[]},"metadata":{}},"appUrl":"https://web.geolibre.app/","layout":"full","theme":"light","panels":"expanded"},"evals":[],"jsHooks":[]}</script></code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
