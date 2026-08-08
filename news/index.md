@@ -39,6 +39,9 @@ export, and a Shiny proxy that drives the live map.
   [`add_heatmap()`](https://r.geolibre.app/reference/add_heatmap.md),
   [`add_xy_data()`](https://r.geolibre.app/reference/add_xy_data.md),
   and [`add_csv()`](https://r.geolibre.app/reference/add_csv.md).
+- [`add_xy_data()`](https://r.geolibre.app/reference/add_xy_data.md) now
+  builds ordinary data-frame point features in one pass, substantially
+  reducing construction time for large tables.
 - Add [`add_geojson()`](https://r.geolibre.app/reference/add_geojson.md)
   support for HTTP(S) URLs and `sfc`/`sfg` objects, and
   [`add_data()`](https://r.geolibre.app/reference/add_data.md) for
