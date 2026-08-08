@@ -25,7 +25,7 @@ error rather than failing the build if the host is unreachable.
 project_url <- "https://assets.geolibre.app/projects/nyc-buildings.geolibre.json"
 nyc_buildings <- jsonlite::read_json(project_url, simplifyVector = FALSE)
 
-geolibre(nyc_buildings, panels = "collapsed")
+geolibre(nyc_buildings, panels = "collapsed", height = 600)
 ```
 
 ## A single point
