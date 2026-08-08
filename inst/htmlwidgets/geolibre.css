@@ -4,7 +4,7 @@
   max-width: none;
   min-width: 0;
   overflow: hidden;
-  width: 100% !important;
+  width: 100%;
 }
 
 .geolibre-frame {

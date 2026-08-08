@@ -69,8 +69,8 @@
       const instance = {
         renderValue: function (x) {
           project = x.project;
-          ready = false;
           if (!iframe || iframe.dataset.appUrl !== x.appUrl || iframe.dataset.mapOnly !== String(x.mapOnly)) {
+            ready = false;
             iframe = createFrame(el, x);
             iframe.dataset.appUrl = x.appUrl;
             iframe.dataset.mapOnly = String(x.mapOnly);

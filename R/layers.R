@@ -60,6 +60,23 @@ add_raster <- function(map, url, name = "Raster", bands = NULL,
   if (!is.character(url) || length(url) != 1L || !grepl("^https?://", url)) {
     stop("`url` must be a single public HTTP(S) URL.", call. = FALSE)
   }
+  if (!is.null(bands) &&
+      (!is.numeric(bands) || !length(bands) || any(!is.finite(bands)) ||
+       any(bands <= 0) || any(bands != floor(bands)))) {
+    stop("`bands` must contain positive integer indices.", call. = FALSE)
+  }
+  valid_rescale <- is.null(rescale) ||
+    (is.list(rescale) && all(vapply(
+      rescale,
+      function(range) {
+        is.numeric(range) && length(range) == 2L &&
+          all(is.finite(range)) && range[[1]] <= range[[2]]
+      },
+      logical(1)
+    )))
+  if (!valid_rescale) {
+    stop("Each `rescale` range must be two finite numbers ordered min <= max.", call. = FALSE)
+  }
   project <- widget_project(map)
   id <- random_id()
   raster_state <- Filter(Negate(is.null), list(

@@ -39,6 +39,15 @@ test_that("invalid inputs fail early", {
   expect_error(add_raster(geolibre(), "local.tif"), "HTTP")
   expect_error(add_geojson(geolibre(), 1), "GeoJSON")
   expect_error(set_view(geolibre(), center = 1), "longitude")
+  expect_error(add_raster(geolibre(), "https://example.com/a.tif", bands = c(0, 2)), "positive integer")
+  expect_error(add_raster(geolibre(), "https://example.com/a.tif", bands = 1.5), "positive integer")
+  expect_error(add_raster(geolibre(), "https://example.com/a.tif", rescale = list(c(10, 0))), "rescale")
+  expect_error(add_raster(geolibre(), "https://example.com/a.tif", rescale = list(c(0, Inf))), "rescale")
+  expect_error(set_view(geolibre(), center = c(NA, 0)), "finite")
+  expect_error(set_view(geolibre(), bbox = c(0, 0, Inf, 1)), "finite")
+  expect_error(set_view(geolibre(), zoom = c(1, 2)), "zoom")
+  expect_error(set_view(geolibre(), bearing = NA_real_), "bearing")
+  expect_error(set_view(geolibre(), pitch = "30"), "pitch")
 })
 
 test_that("sf objects become WGS84 GeoJSON", {
