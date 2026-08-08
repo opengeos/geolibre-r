@@ -3,7 +3,7 @@ title: "Interactive GeoLibre map"
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", out.width = "100%")
 ```
 
 This page runs the same `geolibre` code used in RStudio, Quarto, R Markdown,
