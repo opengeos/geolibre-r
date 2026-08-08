@@ -4,5 +4,7 @@
 ^\.gitignore$
 ^LICENSE\.md$
 ^cran-comments\.md$
+^CNAME$
+^docs$
 ^.*\.Rproj$
 ^\.Rproj\.user$

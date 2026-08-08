@@ -11,7 +11,8 @@ Description: Embeds the full 'GeoLibre' geographic information system in
     and read and write '.geolibre.json' project files. The underlying
     application is described in Wu (2026) <doi:10.5281/zenodo.20785400>.
 License: MIT + file LICENSE
-URL: https://github.com/opengeos/geolibre-r, https://geolibre.app
+URL: https://r.geolibre.app, https://github.com/opengeos/geolibre-r,
+    https://geolibre.app
 BugReports: https://github.com/opengeos/geolibre-r/issues
 Depends: R (>= 4.1.0)
 Imports:
