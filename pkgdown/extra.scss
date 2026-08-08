@@ -1,0 +1,30 @@
+// Widen the page. pkgdown caps text at 50rem inside a col-md-9 column, so on a
+// wide screen the content stops well short of its column and leaves a band of
+// dead space between it and the right-hand "On this page" sidebar. Interactive
+// map widgets, which render at the full content width, suffer most.
+@media (min-width: 992px) {
+  .container {
+    max-width: 1440px;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 768px) {
+  // Let the content fill its column. min-width: 0 keeps a wide code block or
+  // map widget from expanding the flex item past its column.
+  .row > main {
+    max-width: none;
+    min-width: 0;
+  }
+
+  // pkgdown separates the sidebar from the content with an 80px left margin.
+  // That margin sits outside the 9/3 split, so once main uses its full column
+  // the row overflows and the sidebar wraps below the article. Move the gap
+  // inside the sidebar's own column as padding, which keeps the same visual
+  // separation and puts the sidebar flush against the right edge.
+  .row > aside {
+    margin-left: 0;
+    padding-left: 2.5rem;
+  }
+}
