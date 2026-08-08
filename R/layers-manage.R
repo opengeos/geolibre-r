@@ -308,37 +308,47 @@ duplicate_layer <- function(map, layer, name = NULL) {
   }
   update_project(map, function(project) {
     source <- project$layers[[find_layer_position(project, layer)]]
+    old_id <- source$id
     source$id <- new_uuid()
     source$name <- if (is.null(name)) {
       paste(if (is_scalar_string(source$name)) source$name else "Layer", "copy")
     } else {
       name
     }
-    # Layer kinds that key native ids off their own layer id must be re-keyed, or
-    # the copy would collide with its source in the application's layer sync.
-    source <- rekey_layer_sources(source)
+    # Layer kinds that key their source and native layer ids off their own layer
+    # id must be re-keyed, or the copy would collide with its source in the
+    # application's layer sync.
+    source <- rekey_layer_sources(source, old_id)
     project$layers <- c(project$layers, list(source))
     project
   })
 }
 
 # Re-point the id-derived fields a duplicated layer carries at its new id.
-rekey_layer_sources <- function(layer) {
+#
+# The ids are built by suffixing the layer id ("<id>-raster", "<id>-source", or
+# a per-source-layer name), so substituting the prefix preserves each suffix and
+# keeps a layer that carries several of them distinct. A UUID holds no regular
+# expression metacharacters, so it is safe to anchor on directly.
+rekey_layer_sources <- function(layer, old_id) {
   id <- layer$id
+  if (!is_scalar_string(old_id)) return(layer)
   if (is.list(layer$source) && !is.null(layer$source$sourceId)) {
     layer$source$sourceId <- id
   }
   if (!is.list(layer$metadata)) return(layer)
   if (!is.null(layer$metadata$sourceId)) layer$metadata$sourceId <- id
-  native <- unlist(layer$metadata$nativeLayerIds, use.names = FALSE)
-  if (length(native)) {
-    layer$metadata$nativeLayerIds <- as_json_array(
-      ifelse(grepl("-raster$", native), paste0(id, "-raster"), id)
-    )
-  }
-  sources <- unlist(layer$metadata$sourceIds, use.names = FALSE)
-  if (length(sources)) {
-    layer$metadata$sourceIds <- as_json_array(paste0(id, "-source"))
+  for (field in c("nativeLayerIds", "sourceIds")) {
+    # Absent stays absent, and an empty array stays an empty array: a vector
+    # layer ships `nativeLayerIds: []` on purpose, and assigning NULL would drop
+    # the field rather than keep it empty.
+    if (is.null(layer$metadata[[field]])) next
+    values <- unlist(layer$metadata[[field]], use.names = FALSE)
+    layer$metadata[[field]] <- if (length(values)) {
+      as_json_array(sub(paste0("^", old_id), id, values))
+    } else {
+      empty_array()
+    }
   }
   layer
 }

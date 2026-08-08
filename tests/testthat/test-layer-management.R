@@ -81,6 +81,36 @@ test_that("duplicating a layer re-keys the ids the application derives", {
   expect_equal(layer_names(named)[[4]], "Copy")
 })
 
+test_that("re-keying a duplicate preserves each id suffix and empty arrays", {
+  raster <- geolibre() |>
+    add_pmtiles("https://example.com/a.pmtiles", name = "Raster", tile_type = "raster") |>
+    duplicate_layer("Raster")
+  copy <- raster$x$project$layers[[2]]
+  # The "-raster" suffix survives rather than collapsing to the bare id.
+  expect_equal(copy$metadata$nativeLayerIds, list(paste0(copy$id, "-raster")))
+
+  vector <- geolibre() |>
+    add_geoparquet("https://example.com/a.parquet", name = "Parcels") |>
+    duplicate_layer("Parcels")
+  vector_copy <- vector$x$project$layers[[2]]
+  expect_equal(vector_copy$metadata$sourceIds, list(paste0(vector_copy$id, "-source")))
+  # A deliberately empty array stays an empty array, not a dropped field.
+  expect_false(is.null(vector_copy$metadata$nativeLayerIds))
+  expect_length(vector_copy$metadata$nativeLayerIds, 0L)
+
+  # A layer carrying several derived ids keeps them distinct.
+  multi <- geolibre() |> add_pmtiles("https://example.com/a.pmtiles", name = "Multi")
+  id <- multi$x$project$layers[[1]]$id
+  multi$x$project$layers[[1]]$metadata$nativeLayerIds <- list(
+    paste0(id, "-roads"), paste0(id, "-buildings")
+  )
+  copied <- duplicate_layer(multi, "Multi")$x$project$layers[[2]]
+  expect_equal(
+    copied$metadata$nativeLayerIds,
+    list(paste0(copied$id, "-roads"), paste0(copied$id, "-buildings"))
+  )
+})
+
 test_that("removing a layer drops it from a swipe comparison", {
   map <- three_layer_map() |> split_map(c("Bottom", "Middle"), "Top")
   swipe <- map$x$project$plugins$settings[["maplibre-gl-swipe"]]
