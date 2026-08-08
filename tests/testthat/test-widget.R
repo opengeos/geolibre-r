@@ -116,12 +116,16 @@ test_that("the constructor seeds the camera, basemap, and name", {
 test_that("layout and theme reach the widget payload", {
   expect_equal(geolibre()$x$layout, "embed")
   expect_equal(geolibre()$x$theme, "light")
+  expect_equal(geolibre()$x$panels, "expanded")
   expect_equal(geolibre(layout = "full", theme = "dark")$x$layout, "full")
   expect_equal(geolibre(layout = "full", theme = "dark")$x$theme, "dark")
+  expect_equal(geolibre(panels = "collapsed")$x$panels, "collapsed")
+  expect_equal(geolibre(panels = "hidden")$x$panels, "hidden")
   # The superseded map_only argument still selects the map-only layout.
   expect_equal(geolibre(map_only = TRUE)$x$layout, "maponly")
   expect_error(geolibre(layout = "tiny"), "layout|arg")
   expect_error(geolibre(theme = "sepia"), "theme|arg")
+  expect_error(geolibre(panels = "floating"), "panels|arg")
 })
 
 test_that("a supplied project takes precedence over constructor defaults", {
