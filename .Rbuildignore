@@ -3,5 +3,6 @@
 ^README\.Rmd$
 ^\.gitignore$
 ^LICENSE\.md$
+^cran-comments\.md$
 ^.*\.Rproj$
 ^\.Rproj\.user$

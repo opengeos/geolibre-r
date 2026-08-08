@@ -10,7 +10,11 @@ GeoLibre's project format and embed bridge.
 ## Installation
 
 ```r
-# install.packages("pak")
+# Once released on CRAN:
+install.packages("geolibre")
+
+# Development version:
+install.packages("pak")
 pak::pak("opengeos/geolibre-r")
 ```
 

@@ -1,11 +1,15 @@
 Package: geolibre
 Title: Interactive GIS with 'GeoLibre'
-Version: 0.1.0.9000
-Authors@R: person("Qiusheng", "Wu", email = "giswqs@gmail.com", role = c("aut", "cre"))
-Description: Embeds the full 'GeoLibre' geographic information system in R
-    Markdown, 'Quarto', 'Shiny', and the RStudio Viewer. Create maps from
+Version: 0.1.0
+Authors@R: c(
+    person("Qiusheng", "Wu", email = "giswqs@gmail.com", role = c("aut", "cre")),
+    person("Open Geospatial Solutions", role = "cph")
+    )
+Description: Embeds the full 'GeoLibre' geographic information system in
+    'R Markdown', 'Quarto', 'Shiny', and the 'RStudio' Viewer. Create maps from
     'GeoJSON' and 'sf' objects, add remote raster sources, control the camera,
-    and read and write '.geolibre.json' project files.
+    and read and write '.geolibre.json' project files. The underlying
+    application is described in Wu (2026) <doi:10.5281/zenodo.20785400>.
 License: MIT + file LICENSE
 URL: https://github.com/opengeos/geolibre-r, https://geolibre.app
 BugReports: https://github.com/opengeos/geolibre-r/issues
@@ -14,11 +18,11 @@ Imports:
     htmlwidgets,
     jsonlite
 Suggests:
-    htmltools,
     sf,
     shiny,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Encoding: UTF-8
+Language: en-US
 Roxygen: list(markdown = TRUE)
 Config/roxygen2/version: 8.1.0

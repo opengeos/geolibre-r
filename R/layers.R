@@ -8,9 +8,18 @@
 #' @param visible Whether the layer is initially visible.
 #' @param opacity Layer opacity from zero to one.
 #' @return The modified widget.
+#' @examples
+#' point <- list(
+#'   type = "Feature",
+#'   properties = list(name = "Washington, DC"),
+#'   geometry = list(type = "Point", coordinates = c(-77.0369, 38.9072))
+#' )
+#' map <- geolibre() |> add_geojson(point, name = "Places")
+#' stopifnot(length(map$x$project$layers) == 1L)
 #' @export
 add_geojson <- function(map, data, name = "GeoJSON", style = list(),
                         visible = TRUE, opacity = 1) {
+  validate_layer_options(name, style, visible)
   project <- widget_project(map)
   geojson <- as_geojson(data)
   layer <- list(
@@ -30,6 +39,14 @@ add_geojson <- function(map, data, name = "GeoJSON", style = list(),
 #' @param data An `sf` or `sfc` object.
 #' @inheritParams add_geojson
 #' @return The modified widget.
+#' @examples
+#' if (requireNamespace("sf", quietly = TRUE)) {
+#'   point <- sf::st_sf(
+#'     name = "Washington, DC",
+#'     geometry = sf::st_sfc(sf::st_point(c(-77.0369, 38.9072)), crs = 4326)
+#'   )
+#'   map <- geolibre() |> add_sf(point, name = "Places")
+#' }
 #' @export
 add_sf <- function(map, data, name = deparse(substitute(data)), style = list(),
                    visible = TRUE, opacity = 1) {
@@ -53,12 +70,21 @@ add_sf <- function(map, data, name = deparse(substitute(data)), style = list(),
 #' @param visible Whether the layer is visible.
 #' @param opacity Layer opacity from zero to one.
 #' @return The modified widget.
+#' @examples
+#' map <- geolibre() |>
+#'   add_raster("https://example.com/image.tif", bands = c(1, 2, 3))
+#' stopifnot(map$x$project$layers[[1]]$type == "cog")
 #' @export
 add_raster <- function(map, url, name = "Raster", bands = NULL,
                        colormap = NULL, rescale = NULL, style = list(),
                        visible = TRUE, opacity = 1) {
-  if (!is.character(url) || length(url) != 1L || !grepl("^https?://", url)) {
+  validate_layer_options(name, style, visible)
+  if (!is.character(url) || length(url) != 1L || is.na(url) || !grepl("^https?://", url)) {
     stop("`url` must be a single public HTTP(S) URL.", call. = FALSE)
+  }
+  if (!is.null(colormap) &&
+      (!is.character(colormap) || length(colormap) != 1L || is.na(colormap))) {
+    stop("`colormap` must be NULL or a single string.", call. = FALSE)
   }
   if (!is.null(bands) &&
       (!is.numeric(bands) || !length(bands) || any(!is.finite(bands)) ||
@@ -109,14 +135,39 @@ as_geojson <- function(data) {
     path <- tempfile(fileext = ".geojson")
     on.exit(unlink(path), add = TRUE)
     sf::st_write(data, path, driver = "GeoJSON", quiet = TRUE)
-    return(jsonlite::read_json(path, simplifyVector = FALSE))
+    data <- jsonlite::read_json(path, simplifyVector = FALSE)
   }
   if (is.character(data) && length(data) == 1L) {
     text <- if (file.exists(data)) paste(readLines(data, warn = FALSE), collapse = "\n") else data
-    return(jsonlite::fromJSON(text, simplifyVector = FALSE))
+    data <- tryCatch(
+      jsonlite::fromJSON(text, simplifyVector = FALSE),
+      error = function(error) stop("`data` is not valid GeoJSON: ", conditionMessage(error), call. = FALSE)
+    )
   }
   if (!is.list(data)) stop("`data` must be GeoJSON, a path, JSON, or an sf object.", call. = FALSE)
-  data
+  type <- data$type
+  if (!is.character(type) || length(type) != 1L) {
+    stop("GeoJSON must have a single string `type`.", call. = FALSE)
+  }
+  if (identical(type, "FeatureCollection")) {
+    if (is.null(data$features)) data$features <- list()
+    if (!is.list(data$features)) stop("A GeoJSON FeatureCollection must contain a `features` list.", call. = FALSE)
+    return(data)
+  }
+  if (identical(type, "Feature")) {
+    return(list(type = "FeatureCollection", features = list(data)))
+  }
+  geometry_types <- c(
+    "Point", "MultiPoint", "LineString", "MultiLineString",
+    "Polygon", "MultiPolygon", "GeometryCollection"
+  )
+  if (type %in% geometry_types) {
+    return(list(
+      type = "FeatureCollection",
+      features = list(list(type = "Feature", properties = list(), geometry = data))
+    ))
+  }
+  stop("Unsupported GeoJSON type: ", type, call. = FALSE)
 }
 
 validate_opacity <- function(value) {
@@ -124,4 +175,18 @@ validate_opacity <- function(value) {
     stop("`opacity` must be a number between 0 and 1.", call. = FALSE)
   }
   unname(value)
+}
+
+validate_layer_options <- function(name, style, visible) {
+  if (!is.character(name) || length(name) != 1L || is.na(name) || !nzchar(name)) {
+    stop("`name` must be a single non-empty string.", call. = FALSE)
+  }
+  if (!is.list(style)) stop("`style` must be a named list.", call. = FALSE)
+  if (length(style) && (is.null(names(style)) || any(!nzchar(names(style))))) {
+    stop("`style` must be a named list.", call. = FALSE)
+  }
+  if (!is.logical(visible) || length(visible) != 1L || is.na(visible)) {
+    stop("`visible` must be TRUE or FALSE.", call. = FALSE)
+  }
+  invisible(TRUE)
 }
