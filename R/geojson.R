@@ -166,13 +166,18 @@ point_feature <- function(lng, lat, properties = NULL) {
   )
 }
 
-# Parse and validate one row's coordinate pair. Shared by the direct
-# data-frame path below and the general row-wise path in `add_xy_data()` so the
-# two cannot drift apart.
+# The one place either path in `add_xy_data()` reports an unusable coordinate
+# pair, so the two cannot report the same failure differently.
+stop_invalid_coordinates <- function(index) {
+  stop_geolibre("Row ", index, " has invalid coordinates.")
+}
+
+# Parse and validate one row's coordinate pair, for the general row-wise path in
+# `add_xy_data()` where a row's values come from a list and can have any length.
 parse_point_coordinates <- function(x, y, index) {
   coordinates <- suppressWarnings(as.numeric(c(x, y)))
   if (length(coordinates) != 2L || any(!is.finite(coordinates))) {
-    stop_geolibre("Row ", index, " has invalid coordinates.")
+    stop_invalid_coordinates(index)
   }
   coordinates
 }
@@ -197,12 +202,16 @@ data_frame_point_features <- function(data, x, y) {
   # data.table reads a character `i` as a row filter).
   property_columns <- lapply(property_names, function(name) data[[name]])
   names(property_columns) <- property_names
-  x_values <- data[[x]]
-  y_values <- data[[y]]
+  # The coordinate columns are atomic vectors here, so coerce and check them
+  # once for the whole frame rather than establishing a `suppressWarnings()`
+  # handler and coercing per row.
+  x_values <- suppressWarnings(as.numeric(data[[x]]))
+  y_values <- suppressWarnings(as.numeric(data[[y]]))
+  invalid <- which(!is.finite(x_values) | !is.finite(y_values))
+  if (length(invalid)) stop_invalid_coordinates(invalid[[1]])
   lapply(seq_len(nrow(data)), function(index) {
-    coordinates <- parse_point_coordinates(x_values[index], y_values[index], index)
     properties <- lapply(property_columns, function(column) column[index])
-    point_feature(coordinates[[1]], coordinates[[2]], properties)
+    point_feature(x_values[[index]], y_values[[index]], properties)
   })
 }
 

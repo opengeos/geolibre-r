@@ -125,6 +125,8 @@ test_that("tabular sources become point layers", {
     add_csv(geolibre(), "longitude,latitude\nnot,anumber"),
     "invalid coordinates"
   )
+  frame$latitude[[2]] <- NA_real_
+  expect_error(add_xy_data(geolibre(), frame), "Row 2 has invalid coordinates")
 })
 
 test_that("ordinary data frames retain column classes on the direct point path", {
