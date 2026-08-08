@@ -157,6 +157,11 @@ export, and a Shiny proxy that drives the live map.
 
 ### Bug fixes
 
+- [`add_marker()`](https://r.geolibre.app/reference/add_marker.md) and
+  named
+  [`add_markers()`](https://r.geolibre.app/reference/add_markers.md)
+  entries now reject invalid coordinates and properties instead of
+  serializing malformed GeoJSON.
 - `set_view(bbox = )` wrote an unknown `bounds` field that the
   application ignored, so the requested extent was silently dropped. It
   now resolves the box to the `center`, `zoom`, and `bbox` the

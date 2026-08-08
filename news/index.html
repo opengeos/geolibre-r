@@ -78,6 +78,8 @@
 <div class="section level3">
 <h3 id="bug-fixes-0-2-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-2-0"></a></h3>
 <ul><li>
+<code><a href="../reference/add_marker.html">add_marker()</a></code> and named <code><a href="../reference/add_markers.html">add_markers()</a></code> entries now reject invalid coordinates and properties instead of serializing malformed GeoJSON.</li>
+<li>
 <code>set_view(bbox = )</code> wrote an unknown <code>bounds</code> field that the application ignored, so the requested extent was silently dropped. It now resolves the box to the <code>center</code>, <code>zoom</code>, and <code>bbox</code> the application reads.</li>
 <li>The default camera now matches the application’s own, <code>c(-100, 40)</code> at zoom 2, rather than <code>c(0, 20)</code>.</li>
 </ul></div>
