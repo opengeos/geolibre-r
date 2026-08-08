@@ -13,9 +13,110 @@ articles:
     contents:
       - articles/interactive-map
 reference:
-  - title: Create maps
-    contents: [geolibre, add_geojson, add_sf, add_raster, set_view]
-  - title: Project files
-    contents: [load_project, save_project]
+  - title: Create a map
+    contents: [geolibre]
+  - title: Vector layers
+    desc: >
+      Vector data from GeoJSON, `sf`, or any format the browser can stream.
+    contents:
+      - add_geojson
+      - add_sf
+      - add_data
+      - add_choropleth
+      - add_vector
+      - add_geoparquet
+      - add_flatgeobuf
+      - add_shp
+      - add_kml
+      - add_gpkg
+  - title: Points and markers
+    contents:
+      - add_marker
+      - add_markers
+      - add_circle_markers
+      - add_marker_cluster
+      - add_heatmap
+      - add_xy_data
+      - add_csv
+  - title: Rasters, tiles, and services
+    contents:
+      - add_raster
+      - add_cog
+      - add_tile_layer
+      - add_wms
+      - add_wmts
+      - add_wfs
+      - add_vector_tiles
+      - add_pmtiles
+      - add_3d_tiles
+      - add_video
+  - title: Work with layers
+    desc: >
+      Every function here addresses a layer by its id or its name.
+    contents:
+      - get_layers
+      - get_layer
+      - layer_names
+      - find_layer_index
+      - set_layer_visibility
+      - set_layer_opacity
+      - set_layer_style
+      - classify_layer
+      - rename_layer
+      - move_layer
+      - duplicate_layer
+      - remove_layer
+      - clear_layers
+      - layer_properties
+      - column_values
+  - title: Camera and basemap
+    contents:
+      - set_view
+      - set_center
+      - set_zoom
+      - set_bearing
+      - set_pitch
+      - fit_bounds
+      - set_basemap
+      - set_project_name
+  - title: Map controls
+    contents:
+      - add_legend
+      - add_colorbar
+      - add_colormap
+      - split_map
+  - title: Catalogs
+    desc: >
+      The basemaps, color ramps, and legend presets the application ships.
+    contents:
+      - basemaps
+      - color_ramp_names
+      - get_color_ramp
+      - interpolate_ramp_colors
+      - builtin_legend_names
+  - title: Projects and export
+    contents:
+      - load_project
+      - save_project
+      - get_project
+      - describe_project
+      - to_html
+      - redact_credentials
+      - redact_layer
+      - redact_url
   - title: Shiny
-    contents: [geolibreOutput, renderGeolibre, geolibre_proxy, update_geolibre]
+    desc: >
+      Render a widget, then drive the live map through a proxy.
+    contents:
+      - geolibreOutput
+      - geolibre_proxy
+      - update_geolibre
+      - geolibre_command
+      - geolibre_fly_to
+      - geolibre_fit_bounds
+      - geolibre_zoom_to_layer
+      - geolibre_get_view
+      - geolibre_identify
+      - geolibre_layer_features
+      - geolibre_run_algorithm
+      - geolibre_to_image

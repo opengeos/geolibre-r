@@ -18,4 +18,12 @@ Read a GeoLibre project
 \examples{
 project <- load_project('{"version":"0.2.0","name":"Example","mapView":{}}')
 stopifnot(project$name == "Example")
+
+# A saved project can be reopened as a widget.
+path <- tempfile(fileext = ".geolibre.json")
+save_project(geolibre() |> add_marker(-77, 39), path)
+map <- geolibre(load_project(path))
+}
+\seealso{
+\code{\link[=save_project]{save_project()}}, \code{\link[=describe_project]{describe_project()}}
 }

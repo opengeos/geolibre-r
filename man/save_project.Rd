@@ -4,12 +4,16 @@
 \alias{save_project}
 \title{Save a GeoLibre project}
 \usage{
-save_project(map, path)
+save_project(map, path, keep_credentials = FALSE)
 }
 \arguments{
 \item{map}{A GeoLibre widget or project list.}
 
 \item{path}{Output path, conventionally ending in \code{.geolibre.json}.}
+
+\item{keep_credentials}{Keep credential-bearing configuration such as layer
+request headers and signed URLs. Defaults to \code{FALSE}, so a saved project is
+safe to commit or share. See \code{\link[=redact_credentials]{redact_credentials()}}.}
 }
 \value{
 \code{path}, invisibly.
@@ -22,4 +26,7 @@ path <- tempfile(fileext = ".geolibre.json")
 save_project(geolibre(), path)
 project <- load_project(path)
 stopifnot(project$name == "Untitled Project")
+}
+\seealso{
+\code{\link[=load_project]{load_project()}}, \code{\link[=redact_credentials]{redact_credentials()}}
 }

@@ -3,10 +3,17 @@
 
   const instances = new Map();
 
-  function embedUrl(base, mapOnly) {
+  // Build the embed URL. `embed=1` turns on the project bridge the widget speaks;
+  // `layout` and `theme` select the application chrome.
+  function embedUrl(base, layout, theme) {
     const url = new URL(base, window.location.href);
     url.searchParams.set("embed", "1");
-    if (mapOnly) url.searchParams.set("maponly", "1");
+    if (theme) url.searchParams.set("theme", theme);
+    if (layout === "maponly") {
+      url.searchParams.set("maponly", "1");
+    } else if (layout !== "full") {
+      url.searchParams.set("layout", "embed");
+    }
     return url.toString();
   }
 
@@ -16,9 +23,15 @@
     iframe.title = "GeoLibre interactive map";
     iframe.allow = "fullscreen; clipboard-read; clipboard-write; geolocation";
     iframe.allowFullscreen = true;
-    iframe.src = embedUrl(x.appUrl, x.mapOnly);
+    iframe.src = embedUrl(x.appUrl, x.layout, x.theme);
     el.replaceChildren(iframe);
     return iframe;
+  }
+
+  function setInput(name, value) {
+    if (window.Shiny) {
+      Shiny.setInputValue(name, value, { priority: "event" });
+    }
   }
 
   HTMLWidgets.widget({
@@ -30,13 +43,52 @@
       let origin = null;
       let ready = false;
       let sequence = 0;
+      // Commands issued before the application signals readiness are held here
+      // and flushed on "geolibre:ready", mirroring the first project push. The
+      // cap keeps a misbehaving app from growing the queue without limit.
+      const pendingCommands = [];
+      // Method name by request id, so a reply can report which command it
+      // answers without the caller having to track ids itself.
+      const inFlight = new Map();
+
+      function post(message) {
+        if (!iframe || !iframe.contentWindow) return;
+        iframe.contentWindow.postMessage(message, origin);
+      }
 
       function postProject() {
-        if (!ready || !iframe || !iframe.contentWindow || !project) return;
-        iframe.contentWindow.postMessage(
-          { type: "geolibre:load-project", project: project, seq: ++sequence },
-          origin
-        );
+        if (!ready || !project) return;
+        post({
+          type: "geolibre:load-project",
+          project: project,
+          seq: ++sequence,
+          trustedWidget: true
+        });
+      }
+
+      function flushCommands() {
+        if (!ready) return;
+        while (pendingCommands.length) post(pendingCommands.shift());
+      }
+
+      function sendCommand(message) {
+        const command = {
+          type: "geolibre:command",
+          requestId: message.requestId,
+          method: message.method,
+          params: message.params || {}
+        };
+        inFlight.set(command.requestId, command.method);
+        if (ready) {
+          post(command);
+        } else if (pendingCommands.length < 500) {
+          pendingCommands.push(command);
+        } else {
+          console.warn(
+            "[geolibre R] command queue full (500); dropping \"" + command.method + "\""
+          );
+          inFlight.delete(command.requestId);
+        }
       }
 
       function resizeFrame(width, height) {
@@ -52,16 +104,29 @@
         if (message.type === "geolibre:ready") {
           ready = true;
           postProject();
+          flushCommands();
         } else if (message.type === "geolibre:state" && message.project) {
           project = message.project;
-          if (window.Shiny) {
-            Shiny.setInputValue(el.id + "_project", project, { priority: "event" });
-          }
+          setInput(el.id + "_project", project);
         } else if (message.type === "geolibre:error") {
-          console.error("[geolibre R]", message.message || "GeoLibre rejected the project");
-          if (window.Shiny) {
-            Shiny.setInputValue(el.id + "_error", message.message || "Unknown error", { priority: "event" });
-          }
+          const text = message.message || "GeoLibre rejected the project";
+          console.error("[geolibre R]", text);
+          setInput(el.id + "_error", text);
+        } else if (message.type === "geolibre:result") {
+          const method = inFlight.get(message.requestId) || null;
+          inFlight.delete(message.requestId);
+          setInput(el.id + "_result", {
+            requestId: message.requestId,
+            method: method,
+            ok: !!message.ok,
+            value: typeof message.value === "undefined" ? null : message.value,
+            error: message.error || null
+          });
+        } else if (message.type === "geolibre:event") {
+          setInput(el.id + "_event", {
+            event: message.event,
+            payload: typeof message.payload === "undefined" ? null : message.payload
+          });
         }
       }
 
@@ -69,11 +134,13 @@
       const instance = {
         renderValue: function (x) {
           project = x.project;
-          if (!iframe || iframe.dataset.appUrl !== x.appUrl || iframe.dataset.mapOnly !== String(x.mapOnly)) {
+          const signature = [x.appUrl, x.layout, x.theme].join("|");
+          if (!iframe || iframe.dataset.signature !== signature) {
             ready = false;
+            pendingCommands.length = 0;
+            inFlight.clear();
             iframe = createFrame(el, x);
-            iframe.dataset.appUrl = x.appUrl;
-            iframe.dataset.mapOnly = String(x.mapOnly);
+            iframe.dataset.signature = signature;
             origin = new URL(x.appUrl, window.location.href).origin;
           } else {
             postProject();
@@ -85,26 +152,32 @@
         updateProject: function (nextProject) {
           project = nextProject;
           postProject();
-        }
+        },
+        sendCommand: sendCommand
       };
       instances.set(el.id, instance);
       return instance;
     }
   });
 
-  if (window.Shiny) {
+  function installHandlers() {
+    if (window.__geolibreHandlersInstalled) return;
+    window.__geolibreHandlersInstalled = true;
     Shiny.addCustomMessageHandler("geolibre:update", function (message) {
       const instance = instances.get(message.id);
       if (instance) instance.updateProject(message.project);
     });
+    Shiny.addCustomMessageHandler("geolibre:command", function (message) {
+      const instance = instances.get(message.id);
+      if (instance) instance.sendCommand(message);
+    });
+  }
+
+  if (window.Shiny) {
+    installHandlers();
   } else {
     document.addEventListener("shiny:connected", function () {
-      if (!window.Shiny || window.__geolibreHandlerInstalled) return;
-      window.__geolibreHandlerInstalled = true;
-      Shiny.addCustomMessageHandler("geolibre:update", function (message) {
-        const instance = instances.get(message.id);
-        if (instance) instance.updateProject(message.project);
-      });
+      if (window.Shiny) installHandlers();
     });
   }
 })();

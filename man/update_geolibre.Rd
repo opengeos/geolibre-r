@@ -7,7 +7,7 @@
 update_geolibre(proxy, map)
 }
 \arguments{
-\item{proxy}{A GeoLibre proxy created by \code{geolibre_proxy()}.}
+\item{proxy}{A GeoLibre proxy created by \code{\link[=geolibre_proxy]{geolibre_proxy()}}.}
 
 \item{map}{A GeoLibre widget or project list.}
 }

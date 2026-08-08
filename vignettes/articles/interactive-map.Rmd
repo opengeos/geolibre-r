@@ -7,12 +7,18 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 ```
 
 This page runs the same `geolibre` code used in RStudio, Quarto, R Markdown,
-and Shiny. The widget below embeds the hosted GeoLibre application, so viewing
-the live map requires JavaScript and internet access.
+and Shiny. The widgets below embed the hosted GeoLibre application, so viewing
+the live maps requires JavaScript and internet access.
+
+```{r library}
+library(geolibre)
+```
+
+## A single point
+
+Style overrides can be passed as named arguments or through a `style` list.
 
 ```{r interactive-map}
-library(geolibre)
-
 point <- list(
   type = "Feature",
   properties = list(name = "Washington, DC"),
@@ -22,13 +28,144 @@ point <- list(
   )
 )
 
-geolibre(map_only = TRUE, height = 600) |>
-  add_geojson(
-    point,
-    name = "Washington, DC",
-    style = list(fillColor = "#dc2626", circleRadius = 8)
-  ) |>
+geolibre(layout = "maponly", height = 600) |>
+  add_geojson(point, name = "Washington, DC", fillColor = "#dc2626", circleRadius = 8) |>
   set_view(center = c(-77.0369, 38.9072), zoom = 10)
+```
+
+## Points from a data frame
+
+`add_xy_data()` reads longitude and latitude columns and keeps the remaining
+columns as feature properties, so they appear when a point is clicked.
+`fit_bounds()` frames the result.
+
+```{r cities}
+cities <- data.frame(
+  name = c("Washington", "New York", "Boston", "Philadelphia"),
+  population = c(689545, 8336817, 654776, 1603797),
+  longitude = c(-77.0369, -74.0060, -71.0589, -75.1652),
+  latitude = c(38.9072, 40.7128, 42.3601, 39.9526)
+)
+
+geolibre(layout = "maponly", height = 600, basemap = "positron") |>
+  add_circle_markers(cities, name = "Cities", radius = 9, fillColor = "#2563eb") |>
+  fit_bounds(c(-78, 38, -70, 43))
+```
+
+## A choropleth with a legend
+
+`add_choropleth()` classifies a numeric column and colors it from a named ramp,
+computing the same graduated stops the application's Style panel produces.
+`color_ramp_names()` lists the ramps, and `interpolate_ramp_colors()` samples one
+so a legend can match the map.
+
+```{r ramps}
+color_ramp_names()
+```
+
+```{r choropleth}
+counties <- list(
+  type = "FeatureCollection",
+  features = list(
+    list(
+      type = "Feature",
+      properties = list(name = "Low", value = 10),
+      geometry = list(type = "Point", coordinates = c(-77.5, 38.5))
+    ),
+    list(
+      type = "Feature",
+      properties = list(name = "Middle", value = 55),
+      geometry = list(type = "Point", coordinates = c(-77.0, 39.0))
+    ),
+    list(
+      type = "Feature",
+      properties = list(name = "High", value = 100),
+      geometry = list(type = "Point", coordinates = c(-76.5, 39.5))
+    )
+  )
+)
+
+breaks <- interpolate_ramp_colors("blues", 3)
+
+geolibre(layout = "maponly", height = 600) |>
+  add_choropleth(
+    counties,
+    column = "value",
+    name = "Observations",
+    colormap = "blues",
+    class_count = 3,
+    circleRadius = 14
+  ) |>
+  add_legend(
+    "Observations",
+    labels = c("10", "55", "100"),
+    colors = breaks,
+    shape = "circle"
+  ) |>
+  set_view(center = c(-77, 39), zoom = 8)
+```
+
+## Rasters and a colorbar
+
+A remote Cloud Optimized GeoTIFF is read directly by the browser, so the server
+must support CORS and HTTP range requests. `add_colorbar()` labels a single-band
+raster's value range.
+
+```{r raster, eval=FALSE}
+geolibre(layout = "maponly", height = 600) |>
+  add_raster(
+    "https://opendata.digitalglobe.com/events/california-fire-2020/pre-event/2018-02-16/pine-gulch-fire20/1030010076004E00.tif",
+    name = "Imagery",
+    bands = c(1, 2, 3)
+  ) |>
+  add_colorbar(colormap = "terrain", vmin = 0, vmax = 3000, label = "Elevation", units = "m")
+```
+
+## Inspecting and rearranging layers
+
+Every layer function addresses a layer by its name or its id. `get_layers()`
+returns one row per layer.
+
+```{r layers}
+map <- geolibre() |>
+  add_marker(-77.0369, 38.9072, name = "Capital") |>
+  add_tile_layer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", name = "OpenStreetMap")
+
+get_layers(map)
+
+map <- map |>
+  move_layer("OpenStreetMap", 1) |>
+  set_layer_opacity("OpenStreetMap", 0.5)
+
+layer_names(map)
+```
+
+`describe_project()` summarizes a project without printing its inlined data.
+
+```{r describe}
+summary <- describe_project(map)
+summary$layerCount
+summary$mapView$zoom
+```
+
+## Saving and exporting
+
+A project saves to GeoLibre's portable `.geolibre.json` format, which the web
+app, the desktop app, and the Python API all read. `to_html()` writes a
+standalone page that needs no running R session.
+
+```{r project-files}
+path <- file.path(tempdir(), "example.geolibre.json")
+save_project(map, path)
+
+restored <- geolibre(load_project(path))
+layer_names(restored)
+```
+
+```{r html-export}
+html_path <- file.path(tempdir(), "example.html")
+to_html(map, html_path, title = "Example map")
+file.exists(html_path)
 ```
 
 If the embedded application is unavailable, open

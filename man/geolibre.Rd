@@ -6,9 +6,15 @@
 \usage{
 geolibre(
   project = NULL,
+  center = NULL,
+  zoom = NULL,
+  basemap = NULL,
+  name = "Untitled Project",
   width = NULL,
   height = NULL,
   app_url = getOption("geolibre.app_url", "https://web.geolibre.app/"),
+  layout = c("embed", "full", "maponly"),
+  theme = c("light", "dark"),
   map_only = FALSE,
   elementId = NULL
 )
@@ -17,12 +23,26 @@ geolibre(
 \item{project}{A GeoLibre project list, a path to a \code{.geolibre.json} file,
 or \code{NULL} for a new project.}
 
+\item{center}{Optional initial \code{c(longitude, latitude)} map center.}
+
+\item{zoom}{Optional initial zoom level.}
+
+\item{basemap}{Optional basemap name from \code{\link[=basemaps]{basemaps()}} or a MapLibre style
+JSON URL. Ignored when \code{project} is supplied, which carries its own.}
+
+\item{name}{Project name recorded in the project file.}
+
 \item{width, height}{Widget dimensions passed to \code{\link[htmlwidgets:createWidget]{htmlwidgets::createWidget()}}.}
 
 \item{app_url}{URL of a GeoLibre web deployment. It must support the
 \code{?embed=1} project bridge.}
 
-\item{map_only}{Hide the application chrome and show only the map.}
+\item{layout}{Application chrome to show: \code{"embed"} (compact controls),
+\code{"full"} (the complete desktop interface), or \code{"maponly"} (map only).}
+
+\item{theme}{Application theme, \code{"light"} or \code{"dark"}.}
+
+\item{map_only}{Deprecated. \code{TRUE} is equivalent to \code{layout = "maponly"}.}
 
 \item{elementId}{Optional widget element ID.}
 }
@@ -30,7 +50,9 @@ or \code{NULL} for a new project.}
 An \code{htmlwidget} that can be modified with \verb{add_*()} functions.
 }
 \description{
-Create a GeoLibre widget
+Creates an \code{htmlwidget} that embeds the GeoLibre geographic information
+system. The widget carries a \code{.geolibre.json} project, which the \verb{add_*()},
+\verb{set_*()}, and control functions build up with the pipe.
 }
 \details{
 The default hosted application requires internet access when the
@@ -39,6 +61,12 @@ operations do not contact it. Set \code{app_url} or the \code{geolibre.app_url}
 option to use a self-hosted deployment.
 }
 \examples{
-map <- geolibre(map_only = TRUE)
+map <- geolibre(center = c(-77.0369, 38.9072), zoom = 10, layout = "maponly")
 stopifnot(inherits(map, "geolibre"))
+
+# A dark-themed map with the full application interface.
+geolibre(basemap = "dark", layout = "full")
+}
+\seealso{
+\code{\link[=add_geojson]{add_geojson()}}, \code{\link[=set_view]{set_view()}}, \code{\link[=save_project]{save_project()}}
 }

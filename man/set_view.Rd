@@ -16,12 +16,17 @@ set_view(
 \arguments{
 \item{map}{A GeoLibre widget.}
 
-\item{center}{Optional longitude/latitude pair.}
+\item{center}{Optional \code{c(longitude, latitude)} pair.}
 
-\item{zoom, bearing, pitch}{Optional camera values.}
+\item{zoom}{Optional zoom level, clamped to between 0 and 24.}
 
-\item{bbox}{Optional west/south/east/north bounds. When supplied it takes
-precedence over \code{center} and \code{zoom}.}
+\item{bearing}{Optional clockwise rotation in degrees.}
+
+\item{pitch}{Optional tilt in degrees, clamped to between 0 and 85.}
+
+\item{bbox}{Optional \code{c(west, south, east, north)} bounds. When supplied it
+takes precedence over \code{center} and \code{zoom}, and is resolved to a center and
+zoom by \code{\link[=fit_bounds]{fit_bounds()}}.}
 }
 \value{
 The modified widget.
@@ -33,4 +38,7 @@ Set the GeoLibre camera
 map <- geolibre() |>
   set_view(center = c(-77.0369, 38.9072), zoom = 10, pitch = 30)
 stopifnot(map$x$project$mapView$zoom == 10)
+}
+\seealso{
+\code{\link[=fit_bounds]{fit_bounds()}}, \code{\link[=set_center]{set_center()}}, \code{\link[=set_zoom]{set_zoom()}}
 }
