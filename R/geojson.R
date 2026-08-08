@@ -166,6 +166,17 @@ point_feature <- function(lng, lat, properties = NULL) {
   )
 }
 
+# Parse and validate one row's coordinate pair. Shared by the direct
+# data-frame path below and the general row-wise path in `add_xy_data()` so the
+# two cannot drift apart.
+parse_point_coordinates <- function(x, y, index) {
+  coordinates <- suppressWarnings(as.numeric(c(x, y)))
+  if (length(coordinates) != 2L || any(!is.finite(coordinates))) {
+    stop_geolibre("Row ", index, " has invalid coordinates.")
+  }
+  coordinates
+}
+
 # Build point features directly from ordinary data-frame columns. This avoids
 # constructing a one-row data frame and converting it to a list for every
 # observation. Irregular columns (list or matrix columns) retain the general
@@ -182,16 +193,15 @@ data_frame_point_features <- function(data, x, y) {
   x_values <- data[[x]]
   y_values <- data[[y]]
   lapply(seq_len(nrow(data)), function(index) {
-    coordinates <- suppressWarnings(as.numeric(c(x_values[index], y_values[index])))
-    if (length(coordinates) != 2L || any(!is.finite(coordinates))) {
-      stop_geolibre("Row ", index, " has invalid coordinates.")
-    }
+    coordinates <- parse_point_coordinates(x_values[index], y_values[index], index)
     properties <- lapply(property_columns, function(column) column[index])
     point_feature(coordinates[[1]], coordinates[[2]], properties)
   })
 }
 
-has_scalar_data_frame_columns <- function(data) {
+# Whether every column is an atomic vector, i.e. not a list-column and not a
+# matrix-column. Those irregular columns keep the general row-wise path.
+has_atomic_vector_columns <- function(data) {
   all(vapply(
     data,
     function(column) is.atomic(column) && is.null(dim(column)),

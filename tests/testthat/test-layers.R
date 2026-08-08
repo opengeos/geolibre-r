@@ -142,6 +142,7 @@ test_that("ordinary data frames retain column classes on the direct point path",
   expect_s3_class(features[[1]]$properties$category, "factor")
   expect_s3_class(features[[1]]$properties$date, "Date")
   expect_equal(features[[2]]$properties$category, factor("b", levels = c("a", "b")))
+  expect_equal(features[[2]]$properties$date, as.Date("2026-01-02"))
 })
 
 test_that("irregular data-frame columns retain the general point path", {

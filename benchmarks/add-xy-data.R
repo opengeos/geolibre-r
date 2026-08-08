@@ -44,6 +44,9 @@ measure <- function(data, iterations) {
   times <- numeric(iterations)
   result <- NULL
   for (iteration in seq_len(iterations)) {
+    # Drop the previous widget before collecting, so the freed memory cannot
+    # push a collection into the timed call below.
+    result <- NULL
     gc(FALSE)
     times[[iteration]] <- system.time(
       result <- add_xy_data(geolibre(), data)

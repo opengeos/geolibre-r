@@ -315,7 +315,7 @@ add_xy_data <- function(map, data, x = "longitude", y = "latitude", name = "XY D
                         style = list(), visible = TRUE, opacity = 1, ...) {
   check_string(x, "x")
   check_string(y, "y")
-  if (is.data.frame(data) && has_scalar_data_frame_columns(data)) {
+  if (is.data.frame(data) && has_atomic_vector_columns(data)) {
     features <- data_frame_point_features(data, x, y)
     return(add_markers(
       map, list(type = "FeatureCollection", features = features),
@@ -334,10 +334,7 @@ add_xy_data <- function(map, data, x = "longitude", y = "latitude", name = "XY D
         "Row ", index, " is missing coordinate columns \"", x, "\" and/or \"", y, "\"."
       )
     }
-    coordinates <- suppressWarnings(as.numeric(c(row[[x]], row[[y]])))
-    if (length(coordinates) != 2L || any(!is.finite(coordinates))) {
-      stop_geolibre("Row ", index, " has invalid coordinates.")
-    }
+    coordinates <- parse_point_coordinates(row[[x]], row[[y]], index)
     point_feature(
       coordinates[[1]], coordinates[[2]],
       row[setdiff(names(row), c(x, y))]
