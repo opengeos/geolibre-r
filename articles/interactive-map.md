@@ -23,7 +23,7 @@ error rather than failing the build if the host is unreachable.
 project_url <- "https://assets.geolibre.app/projects/nyc-buildings.geolibre.json"
 nyc_buildings <- jsonlite::read_json(project_url, simplifyVector = FALSE)
 
-geolibre(nyc_buildings, panels = "collapsed", height = 600)
+geolibre(nyc_buildings, panels = "collapsed", height = 650)
 ```
 
 ## A single point
@@ -163,8 +163,8 @@ map <- geolibre() |>
 
 get_layers(map)
 #>                                     id          name    type visible opacity
-#> 1 97147c91-a71c-47d8-9b34-98987ac22ac9       Capital geojson    TRUE       1
-#> 2 cfa72986-81eb-4476-84df-93866327d5cb OpenStreetMap     xyz    TRUE       1
+#> 1 22156591-f51a-436c-8729-2836ba284a2f       Capital geojson    TRUE       1
+#> 2 6a3fc8e5-d4c5-41d2-9809-8a9bccd7fb50 OpenStreetMap     xyz    TRUE       1
 #>                                           source features
 #> 1                                           <NA>        1
 #> 2 https://tile.openstreetmap.org/{z}/{x}/{y}.png       NA
