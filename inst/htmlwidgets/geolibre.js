@@ -9,6 +9,8 @@
     const url = new URL(base, window.location.href);
     url.searchParams.set("embed", "1");
     if (theme) url.searchParams.set("theme", theme);
+    // A self-hosted `app_url` may already carry `panels`; the argument wins.
+    url.searchParams.delete("panels");
     if (panels === "collapsed") url.searchParams.set("panels", "collapsed");
     if (panels === "hidden") url.searchParams.set("panels", "none");
     if (layout === "maponly") {

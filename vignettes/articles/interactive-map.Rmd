@@ -18,9 +18,10 @@ library(geolibre)
 
 A complete `.geolibre.json` project can be loaded from a URL and passed to
 `geolibre()`. This example opens a 3D map of New York City buildings and subway
-lines.
+lines. The project is fetched while this page is built, so the chunk reports the
+error rather than failing the build if the host is unreachable.
 
-```{r nyc-buildings}
+```{r nyc-buildings, error=TRUE}
 project_url <- "https://assets.geolibre.app/projects/nyc-buildings.geolibre.json"
 nyc_buildings <- jsonlite::read_json(project_url, simplifyVector = FALSE)
 
