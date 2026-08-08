@@ -1,0 +1,10 @@
+url: https://opengeos.github.io/geolibre-r/
+template:
+  bootstrap: 5
+reference:
+  - title: Create maps
+    contents: [geolibre, add_geojson, add_sf, add_raster, set_view]
+  - title: Project files
+    contents: [load_project, save_project]
+  - title: Shiny
+    contents: [geolibreOutput, renderGeolibre, geolibre_proxy, update_geolibre]
