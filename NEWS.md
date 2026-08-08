@@ -80,6 +80,8 @@ proxy that drives the live map.
 
 ## Bug fixes
 
+- `add_marker()` and named `add_markers()` entries now reject invalid coordinates
+  and properties instead of serializing malformed GeoJSON.
 - `set_view(bbox = )` wrote an unknown `bounds` field that the application
   ignored, so the requested extent was silently dropped. It now resolves the box
   to the `center`, `zoom`, and `bbox` the application reads.
