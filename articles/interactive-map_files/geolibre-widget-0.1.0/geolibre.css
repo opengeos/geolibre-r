@@ -1,0 +1,19 @@
+.geolibre.html-widget {
+  box-sizing: border-box;
+  display: block;
+  max-width: none;
+  min-width: 0;
+  overflow: hidden;
+  width: 100%;
+}
+
+.geolibre-frame {
+  border: 0;
+  box-sizing: border-box;
+  display: block;
+  height: 100%;
+  max-height: none;
+  max-width: none;
+  min-width: 0;
+  width: 100%;
+}

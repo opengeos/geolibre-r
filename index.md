@@ -7,6 +7,10 @@
 application to RStudio, Quarto, R Markdown, and Shiny. It is an
 `htmlwidgets` interface to GeoLibre’s project format and embed bridge.
 
+[Open the live interactive map
+example](https://r.geolibre.app/articles/interactive-map.html) to try
+the R widget directly in your browser.
+
 ## Installation
 
 ``` r

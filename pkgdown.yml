@@ -1,8 +1,9 @@
 pandoc: 3.8.3
 pkgdown: 2.2.1
 pkgdown_sha: ~
-articles: {}
-last_built: 2026-08-08T04:53Z
+articles:
+  articles/interactive-map: interactive-map.html
+last_built: 2026-08-08T05:04Z
 urls:
   reference: https://r.geolibre.app/reference
   article: https://r.geolibre.app/articles
