@@ -148,15 +148,34 @@ get_layer <- function(x, layer) {
 #' @param x A GeoLibre widget or a project list.
 #' @param name A layer id or layer name.
 #' @return The one-based index of the first matching layer, or `-1` when none
-#'   matches.
+#'   matches. Unlike the functions that modify a layer, a name several layers
+#'   share resolves to the first of them rather than raising.
 #' @examples
 #' map <- geolibre() |> add_marker(-77, 39, name = "Pin")
 #' find_layer_index(map, "Pin")
 #' find_layer_index(map, "Missing")
 #' @export
 find_layer_index <- function(x, name) {
-  project <- as_project_list(x)
-  tryCatch(find_layer_position(project, name), error = function(error) -1L)
+  if (!is_scalar_string(name)) {
+    stop_geolibre("`name` must be a single layer id or layer name.")
+  }
+  layers <- project_layers(as_project_list(x))
+  if (!length(layers)) return(-1L)
+  field <- function(key) {
+    vapply(
+      layers,
+      function(layer) if (is_scalar_string(layer[[key]])) layer[[key]] else NA_character_,
+      character(1)
+    )
+  }
+  ids <- field("id")
+  names_vector <- field("name")
+  for (matches in list(which(ids == name),
+                       which(names_vector == name),
+                       which(tolower(names_vector) == tolower(name)))) {
+    if (length(matches)) return(matches[[1]])
+  }
+  -1L
 }
 
 #' Show or hide a layer

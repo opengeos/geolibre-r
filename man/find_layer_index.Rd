@@ -13,7 +13,8 @@ find_layer_index(x, name)
 }
 \value{
 The one-based index of the first matching layer, or \code{-1} when none
-matches.
+matches. Unlike the functions that modify a layer, a name several layers
+share resolves to the first of them rather than raising.
 }
 \description{
 Position of a layer in the draw order

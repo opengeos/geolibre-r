@@ -136,3 +136,15 @@ test_that("classify_layer symbolizes a layer already on the map", {
   expect_equal(style$vectorStyleColorRamp, "reds")
   expect_length(style$vectorStyleStops, 3L)
 })
+
+test_that("find_layer_index resolves the first match rather than raising", {
+  map <- geolibre() |>
+    add_marker(-77, 39, name = "Pin") |>
+    add_marker(-76, 40, name = "Pin")
+  # The mutating functions refuse an ambiguous name; a lookup reports the first.
+  expect_equal(find_layer_index(map, "Pin"), 1L)
+  expect_equal(find_layer_index(map, "pin"), 1L)
+  expect_equal(find_layer_index(map, map$x$project$layers[[2]]$id), 2L)
+  expect_equal(find_layer_index(geolibre(), "Pin"), -1L)
+  expect_error(find_layer_index(map, 1), "single layer id")
+})
