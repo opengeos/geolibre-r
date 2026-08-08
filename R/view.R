@@ -6,6 +6,10 @@
 #' @param bbox Optional west/south/east/north bounds. When supplied it takes
 #'   precedence over `center` and `zoom`.
 #' @return The modified widget.
+#' @examples
+#' map <- geolibre() |>
+#'   set_view(center = c(-77.0369, 38.9072), zoom = 10, pitch = 30)
+#' stopifnot(map$x$project$mapView$zoom == 10)
 #' @export
 set_view <- function(map, center = NULL, zoom = NULL, bearing = NULL,
                      pitch = NULL, bbox = NULL) {

@@ -29,3 +29,8 @@ The modified widget.
 \description{
 Set the GeoLibre camera
 }
+\examples{
+map <- geolibre() |>
+  set_view(center = c(-77.0369, 38.9072), zoom = 10, pitch = 30)
+stopifnot(map$x$project$mapView$zoom == 10)
+}

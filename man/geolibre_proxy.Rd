@@ -4,7 +4,7 @@
 \alias{geolibre_proxy}
 \title{Create a GeoLibre Shiny proxy}
 \usage{
-geolibre_proxy(outputId, session = shiny::getDefaultReactiveDomain())
+geolibre_proxy(outputId, session = NULL)
 }
 \arguments{
 \item{outputId}{ID of an existing GeoLibre widget.}
@@ -16,4 +16,9 @@ A proxy object.
 }
 \description{
 Create a GeoLibre Shiny proxy
+}
+\examples{
+if (interactive() && requireNamespace("shiny", quietly = TRUE)) {
+  proxy <- geolibre_proxy("map")
+}
 }

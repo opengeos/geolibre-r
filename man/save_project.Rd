@@ -17,3 +17,9 @@ save_project(map, path)
 \description{
 Save a GeoLibre project
 }
+\examples{
+path <- tempfile(fileext = ".geolibre.json")
+save_project(geolibre(), path)
+project <- load_project(path)
+stopifnot(project$name == "Untitled Project")
+}

@@ -1,0 +1,10 @@
+citHeader("To cite GeoLibre in publications, use:")
+
+bibentry(
+  bibtype = "Manual",
+  title = "GeoLibre: A Lightweight, Cloud-Native GIS Platform for Visualizing, Exploring, and Analyzing Geospatial Data",
+  author = person("Qiusheng", "Wu"),
+  year = "2026",
+  doi = "10.5281/zenodo.20785400",
+  url = "https://geolibre.app"
+)

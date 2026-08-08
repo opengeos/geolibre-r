@@ -32,3 +32,13 @@ An \code{htmlwidget} that can be modified with \verb{add_*()} functions.
 \description{
 Create a GeoLibre widget
 }
+\details{
+The default hosted application requires internet access when the
+widget is displayed. Package installation, project construction, and file
+operations do not contact it. Set \code{app_url} or the \code{geolibre.app_url}
+option to use a self-hosted deployment.
+}
+\examples{
+map <- geolibre(map_only = TRUE)
+stopifnot(inherits(map, "geolibre"))
+}

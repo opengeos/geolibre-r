@@ -41,3 +41,8 @@ The modified widget.
 \description{
 Add a remote raster to a GeoLibre map
 }
+\examples{
+map <- geolibre() |>
+  add_raster("https://example.com/image.tif", bands = c(1, 2, 3))
+stopifnot(map$x$project$layers[[1]]$type == "cog")
+}

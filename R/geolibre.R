@@ -7,11 +7,22 @@
 #'   `?embed=1` project bridge.
 #' @param map_only Hide the application chrome and show only the map.
 #' @param elementId Optional widget element ID.
+#' @details The default hosted application requires internet access when the
+#'   widget is displayed. Package installation, project construction, and file
+#'   operations do not contact it. Set `app_url` or the `geolibre.app_url`
+#'   option to use a self-hosted deployment.
 #' @return An `htmlwidget` that can be modified with `add_*()` functions.
+#' @examples
+#' map <- geolibre(map_only = TRUE)
+#' stopifnot(inherits(map, "geolibre"))
 #' @export
 geolibre <- function(project = NULL, width = NULL, height = NULL,
                      app_url = getOption("geolibre.app_url", "https://web.geolibre.app/"),
                      map_only = FALSE, elementId = NULL) {
+  if (!is.character(app_url) || length(app_url) != 1L || is.na(app_url) ||
+      !grepl("^https?://", app_url)) {
+    stop("`app_url` must be a single HTTP(S) URL.", call. = FALSE)
+  }
   project <- normalize_project(project)
   htmlwidgets::createWidget(
     name = "geolibre",
@@ -53,7 +64,15 @@ normalize_project <- function(project) {
   required <- c("version", "name", "mapView")
   missing <- setdiff(required, names(project))
   if (length(missing)) stop("Invalid project; missing: ", paste(missing, collapse = ", "), call. = FALSE)
+  if (!is.character(project$version) || length(project$version) != 1L || is.na(project$version)) {
+    stop("Invalid project; `version` must be a single string.", call. = FALSE)
+  }
+  if (!is.character(project$name) || length(project$name) != 1L || is.na(project$name)) {
+    stop("Invalid project; `name` must be a single string.", call. = FALSE)
+  }
+  if (!is.list(project$mapView)) stop("Invalid project; `mapView` must be a list.", call. = FALSE)
   if (is.null(project$layers)) project$layers <- list()
+  if (!is.list(project$layers)) stop("Invalid project; `layers` must be a list.", call. = FALSE)
   project
 }
 

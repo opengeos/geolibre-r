@@ -15,3 +15,7 @@ A project list.
 \description{
 Read a GeoLibre project
 }
+\examples{
+project <- load_project('{"version":"0.2.0","name":"Example","mapView":{}}')
+stopifnot(project$name == "Example")
+}

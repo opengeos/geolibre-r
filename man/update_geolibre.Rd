@@ -17,3 +17,8 @@ The proxy, invisibly.
 \description{
 Replace the project displayed by a GeoLibre Shiny widget
 }
+\examples{
+if (interactive() && requireNamespace("shiny", quietly = TRUE)) {
+  update_geolibre(geolibre_proxy("map"), geolibre())
+}
+}
