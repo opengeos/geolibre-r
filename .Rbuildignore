@@ -6,6 +6,7 @@
 ^cran-comments\.md$
 ^CNAME$
 ^docs$
+^pkgdown$
 ^vignettes/articles$
 ^benchmarks$
 ^.*\.Rproj$
