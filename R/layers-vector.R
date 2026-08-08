@@ -315,6 +315,13 @@ add_xy_data <- function(map, data, x = "longitude", y = "latitude", name = "XY D
                         style = list(), visible = TRUE, opacity = 1, ...) {
   check_string(x, "x")
   check_string(y, "y")
+  if (is.data.frame(data) && has_scalar_data_frame_columns(data)) {
+    features <- data_frame_point_features(data, x, y)
+    return(add_markers(
+      map, list(type = "FeatureCollection", features = features),
+      name, style, visible, opacity, ...
+    ))
+  }
   records <- tabular_records(data)
   # Build the features here rather than handing named entries to the marker
   # coercion: that path strips every coordinate alias it recognizes, which would

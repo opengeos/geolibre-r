@@ -100,6 +100,31 @@ test_that("tabular sources become point layers", {
   )
 })
 
+test_that("ordinary data frames retain column classes on the direct point path", {
+  frame <- data.frame(
+    longitude = c(-77, -76),
+    latitude = c(39, 40),
+    category = factor(c("a", "b")),
+    date = as.Date(c("2026-01-01", "2026-01-02"))
+  )
+  features <- add_xy_data(geolibre(), frame)$x$project$layers[[1]]$geojson$features
+  expect_equal(
+    lapply(features, function(feature) feature$geometry$coordinates),
+    list(c(-77, 39), c(-76, 40))
+  )
+  expect_s3_class(features[[1]]$properties$category, "factor")
+  expect_s3_class(features[[1]]$properties$date, "Date")
+  expect_equal(features[[2]]$properties$category, factor("b", levels = c("a", "b")))
+})
+
+test_that("irregular data-frame columns retain the general point path", {
+  frame <- data.frame(longitude = -77, latitude = 39)
+  frame$details <- I(list(list(label = "DC")))
+  feature <- add_xy_data(geolibre(), frame)$x$project$layers[[1]]$geojson$features[[1]]
+  expect_s3_class(feature$properties$details, "AsIs")
+  expect_equal(unclass(feature$properties$details), list(list(label = "DC")))
+})
+
 test_that("choropleths build graduated stops from the data", {
   map <- add_choropleth(
     geolibre(), point_collection(c(0, 50, 100)), "pop",

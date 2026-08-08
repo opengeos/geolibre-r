@@ -159,6 +159,39 @@ point_feature <- function(lng, lat, properties = NULL) {
   )
 }
 
+# Build point features directly from ordinary data-frame columns. This avoids
+# constructing a one-row data frame and converting it to a list for every
+# observation. Irregular columns (list or matrix columns) retain the general
+# row-wise path in `add_xy_data()` so their existing shape semantics stay intact.
+data_frame_point_features <- function(data, x, y) {
+  if (!nrow(data)) return(list())
+  if (!(x %in% names(data)) || !(y %in% names(data))) {
+    stop_geolibre(
+      "Row 1 is missing coordinate columns \"", x, "\" and/or \"", y, "\"."
+    )
+  }
+  property_names <- setdiff(names(data), c(x, y))
+  property_columns <- data[property_names]
+  x_values <- data[[x]]
+  y_values <- data[[y]]
+  lapply(seq_len(nrow(data)), function(index) {
+    coordinates <- suppressWarnings(as.numeric(c(x_values[index], y_values[index])))
+    if (length(coordinates) != 2L || any(!is.finite(coordinates))) {
+      stop_geolibre("Row ", index, " has invalid coordinates.")
+    }
+    properties <- lapply(property_columns, function(column) column[index])
+    point_feature(coordinates[[1]], coordinates[[2]], properties)
+  })
+}
+
+has_scalar_data_frame_columns <- function(data) {
+  all(vapply(
+    data,
+    function(column) is.atomic(column) && is.null(dim(column)),
+    logical(1)
+  ))
+}
+
 # Coerce assorted point inputs into a point FeatureCollection: anything
 # `as_featurecollection()` accepts, plus a matrix or data frame of coordinates
 # and a list of `c(lng, lat)` pairs or named `list(lng =, lat =, ...)` entries.

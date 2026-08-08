@@ -17,6 +17,8 @@ proxy that drives the live map.
 - Add points from coordinates, matrices, data frames, or CSV with
   `add_marker()`, `add_markers()`, `add_circle_markers()`,
   `add_marker_cluster()`, `add_heatmap()`, `add_xy_data()`, and `add_csv()`.
+- `add_xy_data()` now builds ordinary data-frame point features in one pass,
+  substantially reducing construction time for large tables.
 - Add `add_geojson()` support for HTTP(S) URLs and `sfc`/`sfg` objects, and
   `add_data()` for column-driven symbology in one call.
 
