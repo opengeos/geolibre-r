@@ -152,6 +152,13 @@ read_local_vector <- function(path, source_layer = NULL) {
 }
 
 point_feature <- function(lng, lat, properties = NULL) {
+  if (!is.null(properties)) {
+    if (!is.list(properties) ||
+        (length(properties) &&
+          (is.null(names(properties)) || any(!nzchar(names(properties)))))) {
+      stop_geolibre("`properties` must be NULL or a named list.")
+    }
+  }
   list(
     type = "Feature",
     geometry = list(type = "Point", coordinates = c(as.numeric(lng), as.numeric(lat))),
@@ -202,6 +209,12 @@ points_to_featurecollection <- function(points) {
         stop_geolibre(
           "Entry ", index, " needs longitude (lng/lon/long/longitude/x) and ",
           "latitude (lat/latitude/y) values."
+        )
+      }
+      if (!is_scalar_number(lng) || !is_scalar_number(lat)) {
+        stop_geolibre(
+          "Entry ", index,
+          " longitude and latitude must each be one finite numeric value."
         )
       }
       properties <- entry[setdiff(
