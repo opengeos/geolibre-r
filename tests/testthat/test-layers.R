@@ -57,6 +57,33 @@ test_that("marker helpers accept pairs, matrices, and data frames", {
   expect_error(add_markers(geolibre(), list(list(lng = -77))), "latitude")
 })
 
+test_that("named marker entries reject invalid coordinates", {
+  expect_error(
+    add_markers(geolibre(), list(list(lng = "not-a-number", lat = 39))),
+    "finite numeric"
+  )
+  expect_error(
+    add_markers(geolibre(), list(list(lng = -77, lat = Inf))),
+    "finite numeric"
+  )
+  expect_error(
+    add_markers(geolibre(), list(list(lng = c(-77, -76), lat = 39))),
+    "finite numeric"
+  )
+})
+
+test_that("marker properties must be NULL or a named list", {
+  expect_error(add_marker(geolibre(), -77, 39, properties = "DC"), "named list")
+  expect_error(add_marker(geolibre(), -77, 39, properties = list("DC")), "named list")
+
+  marker <- add_marker(
+    geolibre(), -77, 39,
+    properties = list(name = "DC", population = 678972)
+  )
+  properties <- marker$x$project$layers[[1]]$geojson$features[[1]]$properties
+  expect_equal(properties, list(name = "DC", population = 678972))
+})
+
 test_that("marker layers reject non-point geometries", {
   polygon <- list(
     type = "Polygon",
