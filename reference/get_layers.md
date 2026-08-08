@@ -28,8 +28,8 @@ map <- geolibre() |>
   add_raster("https://example.com/image.tif", name = "Image")
 get_layers(map)
 #>                                     id  name    type visible opacity
-#> 1 f7e9fe05-9b87-4174-85e6-802269cf62f3   Pin geojson    TRUE       1
-#> 2 c7aa2dc8-d21e-4019-b952-50cd517552eb Image     cog    TRUE       1
+#> 1 99a4ff3d-c5df-49b0-8035-0ea6f1fb3d24   Pin geojson    TRUE       1
+#> 2 ec0b85d2-08c6-4607-ae89-4e9a8138a2bd Image     cog    TRUE       1
 #>                          source features
 #> 1                          <NA>        1
 #> 2 https://example.com/image.tif       NA
