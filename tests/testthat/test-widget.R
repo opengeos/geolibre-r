@@ -102,3 +102,31 @@ test_that("sf objects become WGS84 GeoJSON", {
   expect_equal(geojson$type, "FeatureCollection")
   expect_equal(geojson$features[[1]]$properties$label, "DC")
 })
+
+test_that("the constructor seeds the camera, basemap, and name", {
+  map <- geolibre(center = c(-77, 39), zoom = 8, basemap = "dark", name = "Bay")
+  expect_equal(map$x$project$mapView$center, c(-77, 39))
+  expect_equal(map$x$project$mapView$zoom, 8)
+  expect_equal(map$x$project$basemapStyleUrl, basemaps()[["dark"]])
+  expect_equal(map$x$project$name, "Bay")
+  # The default camera matches the application's own.
+  expect_equal(geolibre()$x$project$mapView$center, c(-100, 40))
+})
+
+test_that("layout and theme reach the widget payload", {
+  expect_equal(geolibre()$x$layout, "embed")
+  expect_equal(geolibre()$x$theme, "light")
+  expect_equal(geolibre(layout = "full", theme = "dark")$x$layout, "full")
+  expect_equal(geolibre(layout = "full", theme = "dark")$x$theme, "dark")
+  # The superseded map_only argument still selects the map-only layout.
+  expect_equal(geolibre(map_only = TRUE)$x$layout, "maponly")
+  expect_error(geolibre(layout = "tiny"), "layout|arg")
+  expect_error(geolibre(theme = "sepia"), "theme|arg")
+})
+
+test_that("a supplied project takes precedence over constructor defaults", {
+  saved <- geolibre(name = "Saved", center = c(10, 20))$x$project
+  map <- geolibre(saved, center = c(-77, 39), basemap = "dark")
+  expect_equal(map$x$project$name, "Saved")
+  expect_equal(map$x$project$mapView$center, c(10, 20))
+})

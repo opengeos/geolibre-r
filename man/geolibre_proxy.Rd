@@ -9,16 +9,21 @@ geolibre_proxy(outputId, session = NULL)
 \arguments{
 \item{outputId}{ID of an existing GeoLibre widget.}
 
-\item{session}{A Shiny session.}
+\item{session}{A Shiny session. Defaults to the current reactive domain.}
 }
 \value{
-A proxy object.
+A \code{geolibre_proxy} object.
 }
 \description{
-Create a GeoLibre Shiny proxy
+A proxy addresses a widget that is already on screen, so a Shiny app can
+replace its project with \code{\link[=update_geolibre]{update_geolibre()}} or drive the live map with the
+\verb{geolibre_*()} command functions, without re-rendering the widget.
 }
 \examples{
 if (interactive() && requireNamespace("shiny", quietly = TRUE)) {
   proxy <- geolibre_proxy("map")
 }
+}
+\seealso{
+\code{\link[=update_geolibre]{update_geolibre()}}, \code{\link[=geolibre_fly_to]{geolibre_fly_to()}}, \code{\link[=geolibre_command]{geolibre_command()}}
 }

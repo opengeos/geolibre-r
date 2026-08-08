@@ -20,9 +20,27 @@ renderGeolibre(expr, env = parent.frame(), quoted = FALSE)
 
 \item{quoted}{Whether \code{expr} is quoted.}
 }
+\value{
+\code{geolibreOutput()} returns a Shiny output element;
+\code{renderGeolibre()} returns a render function for it.
+}
 \description{
 Shiny bindings for GeoLibre
 }
+\section{Shiny inputs}{
+
+A rendered widget reports back through four inputs, where \code{id} is the
+\code{outputId}:
+\itemize{
+\item \code{input$id_project} — the full project each time the user edits the map.
+\item \code{input$id_error} — the message from a project the application rejected.
+\item \code{input$id_result} — the reply to a proxy command; a list with \code{requestId},
+\code{method}, \code{ok}, and then \code{value} or \code{error}.
+\item \code{input$id_event} — user interaction; a list with \code{event}, one of \code{"click"},
+\code{"selection-change"}, or \code{"layer-change"}, and its \code{payload}.
+}
+}
+
 \examples{
 if (requireNamespace("shiny", quietly = TRUE)) {
   output <- geolibreOutput("map", height = "500px")
