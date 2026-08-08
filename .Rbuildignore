@@ -6,5 +6,6 @@
 ^cran-comments\.md$
 ^CNAME$
 ^docs$
+^vignettes/articles$
 ^.*\.Rproj$
 ^\.Rproj\.user$
