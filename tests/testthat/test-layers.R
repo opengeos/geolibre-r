@@ -157,7 +157,9 @@ test_that("the direct point path does not rely on subclass `[` semantics", {
   # A data.table reads `data[c("a", "b")]` as a row filter rather than as column
   # selection, so the fast path must reach columns with `[[`.
   bracket <- function(x, ...) stop("single-bracket subsetting is not column selection")
+  methods_table <- get(".__S3MethodsTable__.", envir = baseenv())
   registerS3method("[", "geolibre_row_filter_frame", bracket)
+  on.exit(rm("[.geolibre_row_filter_frame", envir = methods_table), add = TRUE)
   frame <- data.frame(longitude = -77, latitude = 39, name = "DC")
   class(frame) <- c("geolibre_row_filter_frame", "data.frame")
   feature <- add_xy_data(geolibre(), frame)$x$project$layers[[1]]$geojson$features[[1]]
