@@ -101,6 +101,10 @@ normalize_project <- function(project) {
   if (!is.list(project$layers)) {
     stop_geolibre("Invalid project; `layers` must be a list.")
   }
+  # Drop malformed entries, such as the `null` a hand-edited project file can
+  # carry, so a layer's position in this list is also its position in the draw
+  # order. Everything that resolves a layer reference then subscripts one list.
+  project$layers <- unname(Filter(is.list, project$layers))
   project
 }
 
@@ -154,8 +158,28 @@ project_layers <- function(project) {
   Filter(is.list, layers)
 }
 
-# Resolve a layer reference to its index in the project's draw order. An exact id
-# match wins outright, so a layer whose *name* equals another layer's *id*
+# The positions of a project's usable layers, with their ids and names. The
+# positions index `project$layers` itself, so a caller can subscript that list
+# directly even if a hand-built project slipped a malformed entry past
+# `normalize_project()`.
+layer_lookup <- function(project) {
+  layers <- if (is.list(project$layers)) project$layers else list()
+  positions <- which(vapply(layers, is.list, logical(1)))
+  field <- function(key) {
+    vapply(
+      positions,
+      function(position) {
+        value <- layers[[position]][[key]]
+        if (is_scalar_string(value)) value else NA_character_
+      },
+      character(1)
+    )
+  }
+  list(positions = positions, ids = field("id"), names = field("name"))
+}
+
+# Resolve a layer reference to its position in the project's draw order. An exact
+# id match wins outright, so a layer whose *name* equals another layer's *id*
 # cannot shadow it; name matching is tried next, exact first, then
 # case-insensitively. A name several layers share is an error rather than an
 # arbitrary pick.
@@ -163,36 +187,26 @@ find_layer_position <- function(project, ref) {
   if (!is_scalar_string(ref)) {
     stop_geolibre("`layer` must be a single layer id or layer name.")
   }
-  layers <- project_layers(project)
-  if (!length(layers)) {
+  lookup <- layer_lookup(project)
+  if (!length(lookup$positions)) {
     stop_geolibre("No layer matches \"", ref, "\". This project has no layers.")
   }
-  ids <- vapply(
-    layers,
-    function(layer) if (is_scalar_string(layer$id)) layer$id else NA_character_,
-    character(1)
-  )
-  hit <- which(ids == ref)
-  if (length(hit)) return(hit[[1]])
-  names_vector <- vapply(
-    layers,
-    function(layer) if (is_scalar_string(layer$name)) layer$name else NA_character_,
-    character(1)
-  )
-  for (matches in list(which(names_vector == ref),
-                       which(tolower(names_vector) == tolower(ref)))) {
-    if (length(matches) == 1L) return(matches[[1]])
+  hit <- which(lookup$ids == ref)
+  if (length(hit)) return(lookup$positions[[hit[[1]]]])
+  for (matches in list(which(lookup$names == ref),
+                       which(tolower(lookup$names) == tolower(ref)))) {
+    if (length(matches) == 1L) return(lookup$positions[[matches[[1]]]])
     if (length(matches) > 1L) {
       stop_geolibre(
         length(matches), " layers are named \"", ref,
         "\"; reference it by id instead (ids: ",
-        paste(ids[matches], collapse = ", "), ")."
+        paste(lookup$ids[matches], collapse = ", "), ")."
       )
     }
   }
   stop_geolibre(
     "No layer matches \"", ref, "\". Layers in this project: ",
-    paste0("\"", names_vector, "\"", collapse = ", ")
+    paste0("\"", lookup$names, "\"", collapse = ", ")
   )
 }
 

@@ -185,12 +185,16 @@ merge_style <- function(style, dots) {
   if (length(style) && (is.null(names(style)) || any(!nzchar(names(style))))) {
     stop_geolibre("`style` must be a named list.")
   }
-  if (!length(dots)) return(style)
-  if (is.null(names(dots)) || any(!nzchar(names(dots)))) {
-    stop_geolibre("Style overrides passed through `...` must all be named.")
+  if (length(dots)) {
+    if (is.null(names(dots)) || any(!nzchar(names(dots)))) {
+      stop_geolibre("Style overrides passed through `...` must all be named.")
+    }
+    style[names(dots)] <- dots
   }
-  style[names(dots)] <- dots
-  style
+  # A NULL override means "not supplied", the way it does everywhere else in R.
+  # Keeping it would write a JSON `null` over the application's default for that
+  # key rather than leaving the default in place.
+  style[!vapply(style, is.null, logical(1))]
 }
 
 validate_layer_options <- function(name, style, visible) {

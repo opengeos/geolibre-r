@@ -316,7 +316,11 @@ add_xy_data <- function(map, data, x = "longitude", y = "latitude", name = "XY D
   check_string(x, "x")
   check_string(y, "y")
   records <- tabular_records(data)
-  points <- lapply(seq_along(records), function(index) {
+  # Build the features here rather than handing named entries to the marker
+  # coercion: that path strips every coordinate alias it recognizes, which would
+  # silently drop a column legitimately named x, y, lon, or longitude when it is
+  # not the one chosen as a coordinate.
+  features <- lapply(seq_along(records), function(index) {
     row <- records[[index]]
     if (!(x %in% names(row)) || !(y %in% names(row))) {
       stop_geolibre(
@@ -327,10 +331,15 @@ add_xy_data <- function(map, data, x = "longitude", y = "latitude", name = "XY D
     if (length(coordinates) != 2L || any(!is.finite(coordinates))) {
       stop_geolibre("Row ", index, " has invalid coordinates.")
     }
-    properties <- row[setdiff(names(row), c(x, y))]
-    c(list(lng = coordinates[[1]], lat = coordinates[[2]]), properties)
+    point_feature(
+      coordinates[[1]], coordinates[[2]],
+      row[setdiff(names(row), c(x, y))]
+    )
   })
-  add_markers(map, points, name, style, visible, opacity, ...)
+  add_markers(
+    map, list(type = "FeatureCollection", features = features),
+    name, style, visible, opacity, ...
+  )
 }
 
 #' Add a CSV of point coordinates

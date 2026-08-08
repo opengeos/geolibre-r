@@ -36,16 +36,35 @@ remove_layer <- function(map, layer) {
 clear_layers <- function(map) {
   update_project(map, function(project) {
     project$layers <- empty_array()
-    project
+    # Every layer a swipe could have referenced is gone, so the control must not
+    # keep clipping against ids that no longer resolve. The basemap entry is a
+    # pseudo-id, not a layer, so it stays.
+    keep_swipe_layers(project, character(0))
   })
 }
 
 drop_swipe_reference <- function(project, layer_id) {
+  # A layer with no id (from a hand-edited project) identifies nothing, and
+  # comparing against NULL would empty both sides instead of neither.
+  if (!is_scalar_string(layer_id)) return(project)
+  keep_swipe_layers(project, layer_id, drop = TRUE)
+}
+
+# Rewrite the swipe control's two sides. With `drop = TRUE`, `ids` are removed;
+# otherwise only `ids` (plus the basemap pseudo-id) are kept.
+keep_swipe_layers <- function(project, ids, drop = FALSE) {
   swipe <- project$plugins$settings[[SWIPE_PLUGIN_ID]]
   if (!is.list(swipe)) return(project)
   for (side in c("leftLayers", "rightLayers")) {
-    ids <- unlist(swipe[[side]], use.names = FALSE)
-    if (length(ids)) swipe[[side]] <- as_json_array(ids[ids != layer_id])
+    current <- unlist(swipe[[side]], use.names = FALSE)
+    if (!length(current)) next
+    swipe[[side]] <- as_json_array(
+      if (drop) {
+        current[!current %in% ids]
+      } else {
+        current[current %in% c(ids, BASEMAP_LAYER_ID)]
+      }
+    )
   }
   project$plugins$settings[[SWIPE_PLUGIN_ID]] <- swipe
   project
@@ -107,8 +126,12 @@ get_layers <- function(x) {
 layer_summary <- function(layer) {
   source <- layer$source
   url <- if (is.list(source)) {
-    candidate <- source$url
-    if (is.null(candidate)) candidate <- unlist(source$tiles, use.names = FALSE)[1]
+    # Exact `[[` again: `$url` would partial match the `urls` array on a video
+    # source and yield a list no branch below can report.
+    candidate <- source[["url"]]
+    for (key in c("tiles", "urls")) {
+      if (is.null(candidate)) candidate <- unlist(source[[key]], use.names = FALSE)[1]
+    }
     candidate
   } else {
     NULL
@@ -333,11 +356,15 @@ duplicate_layer <- function(map, layer, name = NULL) {
 rekey_layer_sources <- function(layer, old_id) {
   id <- layer$id
   if (!is_scalar_string(old_id)) return(layer)
-  if (is.list(layer$source) && !is.null(layer$source$sourceId)) {
-    layer$source$sourceId <- id
+  # Exact `[[` rather than `$`: on a list `$` partial matches, so `$sourceId`
+  # would resolve to the `sourceIds` array a COG or vector layer carries and pass
+  # this guard, while `$<-` does not partial match and would then graft a
+  # `sourceId` field onto a layer that never had one.
+  if (is.list(layer$source) && !is.null(layer$source[["sourceId"]])) {
+    layer$source[["sourceId"]] <- id
   }
   if (!is.list(layer$metadata)) return(layer)
-  if (!is.null(layer$metadata$sourceId)) layer$metadata$sourceId <- id
+  if (!is.null(layer$metadata[["sourceId"]])) layer$metadata[["sourceId"]] <- id
   for (field in c("nativeLayerIds", "sourceIds")) {
     # Absent stays absent, and an empty array stays an empty array: a vector
     # layer ships `nativeLayerIds: []` on purpose, and assigning NULL would drop
