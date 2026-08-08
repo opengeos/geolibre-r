@@ -4,18 +4,22 @@
 
 - **Qiusheng Wu**. Author, maintainer.
 
+- **Open Geospatial Solutions**. Copyright holder.
+
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/opengeos/geolibre-r/blob/main/DESCRIPTION)
+[`inst/CITATION`](https://github.com/opengeos/geolibre-r/blob/main/inst/CITATION)
 
-Wu Q (2026). *geolibre: Interactive GIS with 'GeoLibre'*. R package
-version 0.1.0.9000, <https://github.com/opengeos/geolibre-r>.
+Wu Q (2026). *GeoLibre: A Lightweight, Cloud-Native GIS Platform for
+Visualizing, Exploring, and Analyzing Geospatial Data*.
+[doi:10.5281/zenodo.20785400](https://doi.org/10.5281/zenodo.20785400).
+<https://geolibre.app>.
 
     @Manual{,
-      title = {geolibre: Interactive GIS with 'GeoLibre'},
+      title = {GeoLibre: A Lightweight, Cloud-Native GIS Platform for Visualizing, Exploring, and Analyzing Geospatial Data},
       author = {Qiusheng Wu},
       year = {2026},
-      note = {R package version 0.1.0.9000},
-      url = {https://github.com/opengeos/geolibre-r},
+      doi = {10.5281/zenodo.20785400},
+      url = {https://geolibre.app},
     }

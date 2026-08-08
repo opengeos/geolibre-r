@@ -43,3 +43,17 @@ geolibre(
 ## Value
 
 An `htmlwidget` that can be modified with `add_*()` functions.
+
+## Details
+
+The default hosted application requires internet access when the widget
+is displayed. Package installation, project construction, and file
+operations do not contact it. Set `app_url` or the `geolibre.app_url`
+option to use a self-hosted deployment.
+
+## Examples
+
+``` r
+map <- geolibre(map_only = TRUE)
+stopifnot(inherits(map, "geolibre"))
+```

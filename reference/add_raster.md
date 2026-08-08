@@ -59,3 +59,11 @@ add_raster(
 ## Value
 
 The modified widget.
+
+## Examples
+
+``` r
+map <- geolibre() |>
+  add_raster("https://example.com/image.tif", bands = c(1, 2, 3))
+stopifnot(map$x$project$layers[[1]]$type == "cog")
+```

@@ -11,7 +11,11 @@ application to RStudio, Quarto, R Markdown, and Shiny. It is an
 
 ``` r
 
-# install.packages("pak")
+# Once released on CRAN:
+install.packages("geolibre")
+
+# Development version:
+install.packages("pak")
 pak::pak("opengeos/geolibre-r")
 ```
 

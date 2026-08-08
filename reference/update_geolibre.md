@@ -22,3 +22,11 @@ update_geolibre(proxy, map)
 ## Value
 
 The proxy, invisibly.
+
+## Examples
+
+``` r
+if (interactive() && requireNamespace("shiny", quietly = TRUE)) {
+  update_geolibre(geolibre_proxy("map"), geolibre())
+}
+```

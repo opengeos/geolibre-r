@@ -31,3 +31,12 @@ renderGeolibre(expr, env = parent.frame(), quoted = FALSE)
 - quoted:
 
   Whether `expr` is quoted.
+
+## Examples
+
+``` r
+if (requireNamespace("shiny", quietly = TRUE)) {
+  output <- geolibreOutput("map", height = "500px")
+  stopifnot(inherits(output, "shiny.tag.list"))
+}
+```

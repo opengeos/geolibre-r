@@ -5,7 +5,7 @@ Create a GeoLibre Shiny proxy
 ## Usage
 
 ``` r
-geolibre_proxy(outputId, session = shiny::getDefaultReactiveDomain())
+geolibre_proxy(outputId, session = NULL)
 ```
 
 ## Arguments
@@ -21,3 +21,11 @@ geolibre_proxy(outputId, session = shiny::getDefaultReactiveDomain())
 ## Value
 
 A proxy object.
+
+## Examples
+
+``` r
+if (interactive() && requireNamespace("shiny", quietly = TRUE)) {
+  proxy <- geolibre_proxy("map")
+}
+```

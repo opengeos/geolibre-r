@@ -45,3 +45,15 @@ add_sf(
 ## Value
 
 The modified widget.
+
+## Examples
+
+``` r
+if (requireNamespace("sf", quietly = TRUE)) {
+  point <- sf::st_sf(
+    name = "Washington, DC",
+    geometry = sf::st_sfc(sf::st_point(c(-77.0369, 38.9072)), crs = 4326)
+  )
+  map <- geolibre() |> add_sf(point, name = "Places")
+}
+```
