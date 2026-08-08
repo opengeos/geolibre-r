@@ -1,6 +1,17 @@
 url: https://r.geolibre.app/
 template:
   bootstrap: 5
+navbar:
+  structure:
+    left: [intro, reference, articles, news]
+  components:
+    articles:
+      text: Interactive map
+      href: articles/interactive-map.html
+articles:
+  - title: Interactive examples
+    contents:
+      - articles/interactive-map
 reference:
   - title: Create maps
     contents: [geolibre, add_geojson, add_sf, add_raster, set_view]
