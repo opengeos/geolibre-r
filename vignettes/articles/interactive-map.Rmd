@@ -14,6 +14,19 @@ the live maps requires JavaScript and internet access.
 library(geolibre)
 ```
 
+## Load a GeoLibre project
+
+A complete `.geolibre.json` project can be loaded from a URL and passed to
+`geolibre()`. This example opens a 3D map of New York City buildings and subway
+lines.
+
+```{r nyc-buildings}
+project_url <- "https://assets.geolibre.app/projects/nyc-buildings.geolibre.json"
+nyc_buildings <- jsonlite::read_json(project_url, simplifyVector = FALSE)
+
+geolibre(nyc_buildings, panels = "collapsed")
+```
+
 ## A single point
 
 Style overrides can be passed as named arguments or through a `style` list.

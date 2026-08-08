@@ -19,6 +19,8 @@
 #' @param theme Application theme, `"light"` or `"dark"`.
 #' @param map_only Deprecated. `TRUE` is equivalent to `layout = "maponly"`.
 #' @param elementId Optional widget element ID.
+#' @param panels Initial side-panel state: `"expanded"`, `"collapsed"` (icon
+#'   rails remain available), or `"hidden"`.
 #' @details The default hosted application requires internet access when the
 #'   widget is displayed. Package installation, project construction, and file
 #'   operations do not contact it. Set `app_url` or the `geolibre.app_url`
@@ -36,7 +38,8 @@ geolibre <- function(project = NULL, center = NULL, zoom = NULL, basemap = NULL,
                      name = "Untitled Project", width = NULL, height = NULL,
                      app_url = getOption("geolibre.app_url", "https://web.geolibre.app/"),
                      layout = c("embed", "full", "maponly"), theme = c("light", "dark"),
-                     map_only = FALSE, elementId = NULL) {
+                     map_only = FALSE, elementId = NULL,
+                     panels = c("expanded", "collapsed", "hidden")) {
   check_http_url(app_url, "app_url")
   layout <- if (missing(layout)) {
     if (isTRUE(map_only)) "maponly" else "embed"
@@ -44,6 +47,7 @@ geolibre <- function(project = NULL, center = NULL, zoom = NULL, basemap = NULL,
     check_choice(match.arg(layout), c("embed", "full", "maponly"), "layout")
   }
   theme <- check_choice(match.arg(theme), c("light", "dark"), "theme")
+  panels <- check_choice(match.arg(panels), c("expanded", "collapsed", "hidden"), "panels")
   project <- if (is.null(project)) {
     new_project(
       name = name,
@@ -60,7 +64,8 @@ geolibre <- function(project = NULL, center = NULL, zoom = NULL, basemap = NULL,
       project = project,
       appUrl = app_url,
       layout = layout,
-      theme = theme
+      theme = theme,
+      panels = panels
     ),
     width = width,
     height = height,

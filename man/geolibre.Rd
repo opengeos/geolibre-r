@@ -16,7 +16,8 @@ geolibre(
   layout = c("embed", "full", "maponly"),
   theme = c("light", "dark"),
   map_only = FALSE,
-  elementId = NULL
+  elementId = NULL,
+  panels = c("expanded", "collapsed", "hidden")
 )
 }
 \arguments{
@@ -45,6 +46,9 @@ JSON URL. Ignored when \code{project} is supplied, which carries its own.}
 \item{map_only}{Deprecated. \code{TRUE} is equivalent to \code{layout = "maponly"}.}
 
 \item{elementId}{Optional widget element ID.}
+
+\item{panels}{Initial side-panel state: \code{"expanded"}, \code{"collapsed"} (icon
+rails remain available), or \code{"hidden"}.}
 }
 \value{
 An \code{htmlwidget} that can be modified with \verb{add_*()} functions.
