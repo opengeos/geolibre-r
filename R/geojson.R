@@ -184,12 +184,19 @@ parse_point_coordinates <- function(x, y, index) {
 data_frame_point_features <- function(data, x, y) {
   if (!nrow(data)) return(list())
   if (!(x %in% names(data)) || !(y %in% names(data))) {
+    # A missing column is missing from every row, so the general row-wise path
+    # always fails on row 1. The index is hardcoded to keep the message
+    # identical to the one that path raises.
     stop_geolibre(
       "Row 1 is missing coordinate columns \"", x, "\" and/or \"", y, "\"."
     )
   }
   property_names <- setdiff(names(data), c(x, y))
-  property_columns <- data[property_names]
+  # Pull the columns with `[[` rather than `data[property_names]`: single-bracket
+  # column selection is not what every data.frame subclass means by it (a
+  # data.table reads a character `i` as a row filter).
+  property_columns <- lapply(property_names, function(name) data[[name]])
+  names(property_columns) <- property_names
   x_values <- data[[x]]
   y_values <- data[[y]]
   lapply(seq_len(nrow(data)), function(index) {
