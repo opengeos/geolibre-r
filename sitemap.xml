@@ -1,20 +1,20 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
-<url><loc>https://opengeos.github.io/geolibre-r/404.html</loc></url>
-<url><loc>https://opengeos.github.io/geolibre-r/LICENSE-text.html</loc></url>
-<url><loc>https://opengeos.github.io/geolibre-r/LICENSE.html</loc></url>
-<url><loc>https://opengeos.github.io/geolibre-r/authors.html</loc></url>
-<url><loc>https://opengeos.github.io/geolibre-r/index.html</loc></url>
-<url><loc>https://opengeos.github.io/geolibre-r/news/index.html</loc></url>
-<url><loc>https://opengeos.github.io/geolibre-r/reference/add_geojson.html</loc></url>
-<url><loc>https://opengeos.github.io/geolibre-r/reference/add_raster.html</loc></url>
-<url><loc>https://opengeos.github.io/geolibre-r/reference/add_sf.html</loc></url>
-<url><loc>https://opengeos.github.io/geolibre-r/reference/geolibre.html</loc></url>
-<url><loc>https://opengeos.github.io/geolibre-r/reference/geolibreOutput.html</loc></url>
-<url><loc>https://opengeos.github.io/geolibre-r/reference/geolibre_proxy.html</loc></url>
-<url><loc>https://opengeos.github.io/geolibre-r/reference/index.html</loc></url>
-<url><loc>https://opengeos.github.io/geolibre-r/reference/load_project.html</loc></url>
-<url><loc>https://opengeos.github.io/geolibre-r/reference/save_project.html</loc></url>
-<url><loc>https://opengeos.github.io/geolibre-r/reference/set_view.html</loc></url>
-<url><loc>https://opengeos.github.io/geolibre-r/reference/update_geolibre.html</loc></url>
+<url><loc>https://r.geolibre.app/404.html</loc></url>
+<url><loc>https://r.geolibre.app/LICENSE-text.html</loc></url>
+<url><loc>https://r.geolibre.app/LICENSE.html</loc></url>
+<url><loc>https://r.geolibre.app/authors.html</loc></url>
+<url><loc>https://r.geolibre.app/index.html</loc></url>
+<url><loc>https://r.geolibre.app/news/index.html</loc></url>
+<url><loc>https://r.geolibre.app/reference/add_geojson.html</loc></url>
+<url><loc>https://r.geolibre.app/reference/add_raster.html</loc></url>
+<url><loc>https://r.geolibre.app/reference/add_sf.html</loc></url>
+<url><loc>https://r.geolibre.app/reference/geolibre.html</loc></url>
+<url><loc>https://r.geolibre.app/reference/geolibreOutput.html</loc></url>
+<url><loc>https://r.geolibre.app/reference/geolibre_proxy.html</loc></url>
+<url><loc>https://r.geolibre.app/reference/index.html</loc></url>
+<url><loc>https://r.geolibre.app/reference/load_project.html</loc></url>
+<url><loc>https://r.geolibre.app/reference/save_project.html</loc></url>
+<url><loc>https://r.geolibre.app/reference/set_view.html</loc></url>
+<url><loc>https://r.geolibre.app/reference/update_geolibre.html</loc></url>
 </urlset>
 

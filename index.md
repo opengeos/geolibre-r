@@ -45,8 +45,8 @@ geolibre(map_only = TRUE) |>
 
 ### `sf`
 
-[`add_sf()`](https://opengeos.github.io/geolibre-r/reference/add_sf.md)
-transforms data to WGS 84 before sending GeoJSON to the browser.
+[`add_sf()`](https://r.geolibre.app/reference/add_sf.md) transforms data
+to WGS 84 before sending GeoJSON to the browser.
 
 ``` r
 
@@ -85,7 +85,7 @@ restored <- geolibre(load_project("example.geolibre.json"))
 
 The saved file uses GeoLibre’s portable `.geolibre.json` format and can
 be opened in the web or desktop application.
-[`save_project()`](https://opengeos.github.io/geolibre-r/reference/save_project.md)
+[`save_project()`](https://r.geolibre.app/reference/save_project.md)
 saves the state held by the R widget. In Shiny, browser-side changes are
 also available as `input$<outputId>_project`.
 

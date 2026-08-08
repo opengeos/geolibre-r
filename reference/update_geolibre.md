@@ -13,7 +13,7 @@ update_geolibre(proxy, map)
 - proxy:
 
   A GeoLibre proxy created by
-  [`geolibre_proxy()`](https://opengeos.github.io/geolibre-r/reference/geolibre_proxy.md).
+  [`geolibre_proxy()`](https://r.geolibre.app/reference/geolibre_proxy.md).
 
 - map:
 

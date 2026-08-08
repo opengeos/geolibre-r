@@ -2,36 +2,35 @@
 
 ## Create maps
 
-- [`geolibre()`](https://opengeos.github.io/geolibre-r/reference/geolibre.md)
-  : Create a GeoLibre widget
+- [`geolibre()`](https://r.geolibre.app/reference/geolibre.md) : Create
+  a GeoLibre widget
 
-- [`add_geojson()`](https://opengeos.github.io/geolibre-r/reference/add_geojson.md)
-  : Add GeoJSON to a GeoLibre map
+- [`add_geojson()`](https://r.geolibre.app/reference/add_geojson.md) :
+  Add GeoJSON to a GeoLibre map
 
-- [`add_sf()`](https://opengeos.github.io/geolibre-r/reference/add_sf.md)
-  :
+- [`add_sf()`](https://r.geolibre.app/reference/add_sf.md) :
 
   Add an `sf` object to a GeoLibre map
 
-- [`add_raster()`](https://opengeos.github.io/geolibre-r/reference/add_raster.md)
-  : Add a remote raster to a GeoLibre map
+- [`add_raster()`](https://r.geolibre.app/reference/add_raster.md) : Add
+  a remote raster to a GeoLibre map
 
-- [`set_view()`](https://opengeos.github.io/geolibre-r/reference/set_view.md)
-  : Set the GeoLibre camera
+- [`set_view()`](https://r.geolibre.app/reference/set_view.md) : Set the
+  GeoLibre camera
 
 ## Project files
 
-- [`load_project()`](https://opengeos.github.io/geolibre-r/reference/load_project.md)
-  : Read a GeoLibre project
-- [`save_project()`](https://opengeos.github.io/geolibre-r/reference/save_project.md)
-  : Save a GeoLibre project
+- [`load_project()`](https://r.geolibre.app/reference/load_project.md) :
+  Read a GeoLibre project
+- [`save_project()`](https://r.geolibre.app/reference/save_project.md) :
+  Save a GeoLibre project
 
 ## Shiny
 
-- [`geolibreOutput()`](https://opengeos.github.io/geolibre-r/reference/geolibreOutput.md)
-  [`renderGeolibre()`](https://opengeos.github.io/geolibre-r/reference/geolibreOutput.md)
+- [`geolibreOutput()`](https://r.geolibre.app/reference/geolibreOutput.md)
+  [`renderGeolibre()`](https://r.geolibre.app/reference/geolibreOutput.md)
   : Shiny bindings for GeoLibre
-- [`geolibre_proxy()`](https://opengeos.github.io/geolibre-r/reference/geolibre_proxy.md)
+- [`geolibre_proxy()`](https://r.geolibre.app/reference/geolibre_proxy.md)
   : Create a GeoLibre Shiny proxy
-- [`update_geolibre()`](https://opengeos.github.io/geolibre-r/reference/update_geolibre.md)
+- [`update_geolibre()`](https://r.geolibre.app/reference/update_geolibre.md)
   : Replace the project displayed by a GeoLibre Shiny widget
