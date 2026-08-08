@@ -38,14 +38,14 @@ points <- list(
   ))
 )
 
-geolibre(map_only = TRUE) |>
-  add_geojson(
-    points,
-    name = "Places",
-    style = list(fillColor = "#dc2626", circleRadius = 8)
-  ) |>
+geolibre(layout = "maponly") |>
+  add_geojson(points, name = "Places", fillColor = "#dc2626", circleRadius = 8) |>
   set_view(center = c(-77.0369, 38.9072), zoom = 10)
 ```
+
+Style overrides can be passed as named arguments, as above, or as a
+`style` list. Every `add_*()`, `set_*()`, and control function takes the
+map first and returns it, so calls compose with the pipe.
 
 ### `sf`
 
@@ -62,7 +62,51 @@ geolibre() |>
   add_sf(nc, "North Carolina counties")
 ```
 
-### Remote rasters
+### Points, markers, and tables
+
+``` r
+
+cities <- data.frame(
+  name = c("Washington", "New York", "Boston"),
+  longitude = c(-77.0369, -74.0060, -71.0589),
+  latitude = c(38.9072, 40.7128, 42.3601)
+)
+
+geolibre() |>
+  add_xy_data(cities, name = "Cities", circleRadius = 8) |>
+  fit_bounds(c(-78, 38, -70, 43))
+```
+
+[`add_markers()`](https://r.geolibre.app/reference/add_markers.md),
+[`add_circle_markers()`](https://r.geolibre.app/reference/add_circle_markers.md),
+[`add_marker_cluster()`](https://r.geolibre.app/reference/add_marker_cluster.md),
+and [`add_heatmap()`](https://r.geolibre.app/reference/add_heatmap.md)
+accept the same points in any of several shapes: a list of
+`c(longitude, latitude)` pairs, a two-column matrix, a data frame, point
+GeoJSON, or an `sf` object.
+[`add_csv()`](https://r.geolibre.app/reference/add_csv.md) reads a path,
+a URL, or CSV text.
+
+### Choropleths
+
+[`add_choropleth()`](https://r.geolibre.app/reference/add_choropleth.md)
+classifies a numeric column and colors it from a named ramp, computing
+the same stops the application’s Style panel does.
+
+``` r
+
+geolibre() |>
+  add_choropleth(nc, column = "BIR74", colormap = "blues", class_count = 6) |>
+  add_legend("Births", legend = c(Low = "#eff6ff", High = "#1e3a8a"))
+```
+
+See
+[`color_ramp_names()`](https://r.geolibre.app/reference/color_ramp_names.md)
+for the available ramps and
+[`basemaps()`](https://r.geolibre.app/reference/basemaps.md) for the
+named basemap styles.
+
+### Rasters, tiles, and services
 
 Remote Cloud Optimized GeoTIFFs are read directly by GeoLibre in the
 browser. The server must support CORS and HTTP range requests.
@@ -70,11 +114,52 @@ browser. The server must support CORS and HTTP range requests.
 ``` r
 
 geolibre() |>
-  add_raster(
-    "https://example.org/visual.tif",
-    name = "Satellite image",
-    bands = c(1, 2, 3)
-  )
+  add_raster("https://example.org/visual.tif", name = "Satellite", bands = c(1, 2, 3)) |>
+  add_tile_layer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", name = "OSM") |>
+  add_wms("https://example.org/geoserver/wms", layers = "topp:states") |>
+  add_pmtiles("https://example.org/buildings.pmtiles") |>
+  add_3d_tiles("https://example.org/tileset.json")
+```
+
+[`add_vector()`](https://r.geolibre.app/reference/add_vector.md) hands a
+URL to the application’s in-browser vector control, so GeoParquet,
+FlatGeobuf, zipped Shapefiles, and GeoPackages stream without being
+inlined in the project. A local path is read with `sf` instead.
+
+``` r
+
+geolibre() |> add_geoparquet("https://example.org/parcels.parquet")
+```
+
+### Managing layers
+
+``` r
+
+map <- geolibre() |>
+  add_raster("https://example.org/before.tif", name = "Before") |>
+  add_raster("https://example.org/after.tif", name = "After")
+
+get_layers(map)                      # one row per layer
+map |>
+  set_layer_opacity("Before", 0.6) |>
+  move_layer("After", 1) |>
+  split_map("Before", "After")       # a swipe comparison slider
+```
+
+Layers are addressed by name or by id.
+[`layer_properties()`](https://r.geolibre.app/reference/layer_properties.md)
+and
+[`column_values()`](https://r.geolibre.app/reference/column_values.md)
+read attributes back out of an inlined vector layer.
+
+### Standalone HTML
+
+[`to_html()`](https://r.geolibre.app/reference/to_html.md) writes a
+self-contained page that needs no running R session.
+
+``` r
+
+to_html(map, "map.html", title = "Before and after")
 ```
 
 ### Project files
@@ -88,10 +173,14 @@ restored <- geolibre(load_project("example.geolibre.json"))
 ```
 
 The saved file uses GeoLibre’s portable `.geolibre.json` format and can
-be opened in the web or desktop application.
+be opened in the web or desktop application, or in the Python API.
 [`save_project()`](https://r.geolibre.app/reference/save_project.md)
-saves the state held by the R widget. In Shiny, browser-side changes are
-also available as `input$<outputId>_project`.
+saves the state held by the R widget and strips credentials such as
+layer request headers and signed URLs; pass `keep_credentials = TRUE`
+for a trusted local file.
+[`describe_project()`](https://r.geolibre.app/reference/describe_project.md)
+summarizes a project without printing its inlined data. In Shiny,
+browser-side changes are also available as `input$<outputId>_project`.
 
 ## Shiny
 
@@ -106,22 +195,52 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-  map <- reactiveVal(geolibre(map_only = TRUE))
+  map <- reactiveVal(geolibre(layout = "maponly"))
   output$map <- renderGeolibre(map())
 
+  # Replace the whole project.
   observeEvent(input$reset, {
     next_map <- set_view(map(), center = c(0, 20), zoom = 2)
     map(next_map)
     update_geolibre(geolibre_proxy("map"), next_map)
   })
 
+  # Or drive the map that is already on screen, without re-rendering it.
+  observeEvent(input$fly, {
+    geolibre_fly_to(geolibre_proxy("map"), center = c(-77.0369, 38.9072), zoom = 12)
+  })
+
   observeEvent(input$map_project, {
     message("GeoLibre now has ", length(input$map_project$layers), " layers")
+  })
+
+  # Where a command's reply lands.
+  observeEvent(input$map_result, {
+    message(input$map_result$method, " -> ok = ", input$map_result$ok)
+  })
+
+  # Clicks, selection changes, and layer changes from the browser.
+  observeEvent(input$map_event, {
+    message("event: ", input$map_event$event)
   })
 }
 
 shinyApp(ui, server)
 ```
+
+The proxy functions cover the things a project cannot express:
+[`geolibre_fly_to()`](https://r.geolibre.app/reference/geolibre_fly_to.md),
+[`geolibre_fit_bounds()`](https://r.geolibre.app/reference/geolibre_fit_bounds.md),
+[`geolibre_zoom_to_layer()`](https://r.geolibre.app/reference/geolibre_zoom_to_layer.md),
+[`geolibre_get_view()`](https://r.geolibre.app/reference/geolibre_get_view.md),
+[`geolibre_identify()`](https://r.geolibre.app/reference/geolibre_identify.md),
+[`geolibre_layer_features()`](https://r.geolibre.app/reference/geolibre_layer_features.md),
+[`geolibre_to_image()`](https://r.geolibre.app/reference/geolibre_to_image.md),
+and
+[`geolibre_run_algorithm()`](https://r.geolibre.app/reference/geolibre_run_algorithm.md)
+for the application’s browser-side processing tools.
+[`geolibre_command()`](https://r.geolibre.app/reference/geolibre_command.md)
+forwards anything else the bridge implements.
 
 ## Self-hosted GeoLibre
 
@@ -135,13 +254,20 @@ options(geolibre.app_url = "https://gis.example.org/")
 The deployment must expose the GeoLibre web app and support its
 `?embed=1` project bridge.
 
-## Current scope
+## Scope
 
-- GeoJSON and `sf` vector layers
-- Remote COG/GeoTIFF raster layers
-- Camera control
-- GeoLibre project import and export
-- R Markdown, Quarto, RStudio Viewer, and Shiny support
+- Vector layers from GeoJSON, `sf`, GeoParquet, FlatGeobuf, Shapefiles,
+  GeoPackage, KML, and CSV or data frame coordinates
+- Markers, circle markers, clusters, and heatmaps
+- Rasters (COG/GeoTIFF), XYZ tiles, WMS, WMTS, WFS, vector tiles,
+  PMTiles, 3D Tiles, and georeferenced video
+- Choropleth classification, layer styling, ordering, and inspection
+- Legends, colorbars, and split-map comparisons
+- Camera control, basemaps, and bounding-box fitting
+- Project import and export, credential redaction, and standalone HTML
+  export
+- R Markdown, Quarto, RStudio Viewer, and Shiny support, with a proxy
+  that drives the live map
 - Configurable hosted or self-hosted GeoLibre application
 
 The package intentionally does not bundle GeoLibre’s large web
@@ -151,10 +277,14 @@ an optional distribution later.
 
 # Package index
 
-## Create maps
+## Create a map
 
 - [`geolibre()`](https://r.geolibre.app/reference/geolibre.md) : Create
   a GeoLibre widget
+
+## Vector layers
+
+Vector data from GeoJSON, `sf`, or any format the browser can stream.
 
 - [`add_geojson()`](https://r.geolibre.app/reference/add_geojson.md) :
   Add GeoJSON to a GeoLibre map
@@ -163,20 +293,175 @@ an optional distribution later.
 
   Add an `sf` object to a GeoLibre map
 
+- [`add_data()`](https://r.geolibre.app/reference/add_data.md) : Add
+  data, optionally symbolized by a column
+
+- [`add_choropleth()`](https://r.geolibre.app/reference/add_choropleth.md)
+  : Add a data-driven choropleth layer
+
+- [`add_vector()`](https://r.geolibre.app/reference/add_vector.md) : Add
+  a vector dataset from a URL or local file
+
+- [`add_geoparquet()`](https://r.geolibre.app/reference/add_geoparquet.md)
+  : Add a GeoParquet layer
+
+- [`add_flatgeobuf()`](https://r.geolibre.app/reference/add_flatgeobuf.md)
+  : Add a FlatGeobuf layer
+
+- [`add_shp()`](https://r.geolibre.app/reference/add_shp.md) : Add a
+  Shapefile layer
+
+- [`add_kml()`](https://r.geolibre.app/reference/add_kml.md) : Add a KML
+  or KMZ layer
+
+- [`add_gpkg()`](https://r.geolibre.app/reference/add_gpkg.md) : Add a
+  GeoPackage layer
+
+## Points and markers
+
+- [`add_marker()`](https://r.geolibre.app/reference/add_marker.md) : Add
+  a single point marker
+- [`add_markers()`](https://r.geolibre.app/reference/add_markers.md) :
+  Add point markers
+- [`add_circle_markers()`](https://r.geolibre.app/reference/add_circle_markers.md)
+  : Add circle markers
+- [`add_marker_cluster()`](https://r.geolibre.app/reference/add_marker_cluster.md)
+  : Add clustered point markers
+- [`add_heatmap()`](https://r.geolibre.app/reference/add_heatmap.md) :
+  Add a point density heatmap
+- [`add_xy_data()`](https://r.geolibre.app/reference/add_xy_data.md) :
+  Add points from tabular longitude and latitude columns
+- [`add_csv()`](https://r.geolibre.app/reference/add_csv.md) : Add a CSV
+  of point coordinates
+
+## Rasters, tiles, and services
+
 - [`add_raster()`](https://r.geolibre.app/reference/add_raster.md) : Add
   a remote raster to a GeoLibre map
+- [`add_cog()`](https://r.geolibre.app/reference/add_cog.md) : Add a
+  Cloud Optimized GeoTIFF layer
+- [`add_tile_layer()`](https://r.geolibre.app/reference/add_tile_layer.md)
+  : Add an XYZ raster tile layer
+- [`add_wms()`](https://r.geolibre.app/reference/add_wms.md) : Add a WMS
+  layer
+- [`add_wmts()`](https://r.geolibre.app/reference/add_wmts.md) : Add a
+  WMTS layer
+- [`add_wfs()`](https://r.geolibre.app/reference/add_wfs.md) : Add a WFS
+  layer
+- [`add_vector_tiles()`](https://r.geolibre.app/reference/add_vector_tiles.md)
+  : Add a vector tile layer from a TileJSON endpoint
+- [`add_pmtiles()`](https://r.geolibre.app/reference/add_pmtiles.md) :
+  Add a PMTiles layer
+- [`add_3d_tiles()`](https://r.geolibre.app/reference/add_3d_tiles.md) :
+  Add a 3D Tiles layer
+- [`add_video()`](https://r.geolibre.app/reference/add_video.md) : Add a
+  georeferenced video layer
+
+## Work with layers
+
+Every function here addresses a layer by its id or its name.
+
+- [`get_layers()`](https://r.geolibre.app/reference/get_layers.md) :
+  Summarize a project's layers
+- [`get_layer()`](https://r.geolibre.app/reference/get_layer.md) : Read
+  one layer's full definition
+- [`layer_names()`](https://r.geolibre.app/reference/layer_names.md) :
+  Layer names in draw order
+- [`find_layer_index()`](https://r.geolibre.app/reference/find_layer_index.md)
+  : Position of a layer in the draw order
+- [`set_layer_visibility()`](https://r.geolibre.app/reference/set_layer_visibility.md)
+  [`show_layer()`](https://r.geolibre.app/reference/set_layer_visibility.md)
+  [`hide_layer()`](https://r.geolibre.app/reference/set_layer_visibility.md)
+  : Show or hide a layer
+- [`set_layer_opacity()`](https://r.geolibre.app/reference/set_layer_opacity.md)
+  : Set a layer's opacity
+- [`set_layer_style()`](https://r.geolibre.app/reference/set_layer_style.md)
+  : Restyle a layer
+- [`classify_layer()`](https://r.geolibre.app/reference/classify_layer.md)
+  : Symbolize an existing layer as a choropleth
+- [`rename_layer()`](https://r.geolibre.app/reference/rename_layer.md) :
+  Rename a layer
+- [`move_layer()`](https://r.geolibre.app/reference/move_layer.md) :
+  Move a layer in the draw order
+- [`duplicate_layer()`](https://r.geolibre.app/reference/duplicate_layer.md)
+  : Duplicate a layer
+- [`remove_layer()`](https://r.geolibre.app/reference/remove_layer.md) :
+  Remove a layer
+- [`clear_layers()`](https://r.geolibre.app/reference/clear_layers.md) :
+  Remove every layer
+- [`layer_properties()`](https://r.geolibre.app/reference/layer_properties.md)
+  : Sample a layer's feature properties
+- [`column_values()`](https://r.geolibre.app/reference/column_values.md)
+  : Read one feature property across a layer
+
+## Camera and basemap
 
 - [`set_view()`](https://r.geolibre.app/reference/set_view.md) : Set the
   GeoLibre camera
+- [`set_center()`](https://r.geolibre.app/reference/set_center.md) :
+  Center the map
+- [`set_zoom()`](https://r.geolibre.app/reference/set_zoom.md) : Set the
+  map zoom
+- [`set_bearing()`](https://r.geolibre.app/reference/set_bearing.md) :
+  Set the camera bearing
+- [`set_pitch()`](https://r.geolibre.app/reference/set_pitch.md) : Set
+  the camera pitch
+- [`fit_bounds()`](https://r.geolibre.app/reference/fit_bounds.md) :
+  Frame a bounding box
+- [`set_basemap()`](https://r.geolibre.app/reference/set_basemap.md)
+  [`add_basemap()`](https://r.geolibre.app/reference/set_basemap.md) :
+  Set the background basemap
+- [`set_project_name()`](https://r.geolibre.app/reference/set_project_name.md)
+  : Set the project name
 
-## Project files
+## Map controls
+
+- [`add_legend()`](https://r.geolibre.app/reference/add_legend.md) : Add
+  a legend to the map
+- [`add_colorbar()`](https://r.geolibre.app/reference/add_colorbar.md) :
+  Add a colorbar to the map
+- [`add_colormap()`](https://r.geolibre.app/reference/add_colormap.md) :
+  Add a colorbar from a named color ramp
+- [`split_map()`](https://r.geolibre.app/reference/split_map.md) : Add a
+  split-map comparison slider
+
+## Catalogs
+
+The basemaps, color ramps, and legend presets the application ships.
+
+- [`basemaps()`](https://r.geolibre.app/reference/basemaps.md) : Named
+  GeoLibre basemaps
+- [`color_ramp_names()`](https://r.geolibre.app/reference/color_ramp_names.md)
+  : Available color ramp names
+- [`get_color_ramp()`](https://r.geolibre.app/reference/get_color_ramp.md)
+  : Anchor colors of a color ramp
+- [`interpolate_ramp_colors()`](https://r.geolibre.app/reference/interpolate_ramp_colors.md)
+  : Sample a color ramp into evenly spaced colors
+- [`builtin_legend_names()`](https://r.geolibre.app/reference/builtin_legend_names.md)
+  : Built-in legend preset names
+
+## Projects and export
 
 - [`load_project()`](https://r.geolibre.app/reference/load_project.md) :
   Read a GeoLibre project
 - [`save_project()`](https://r.geolibre.app/reference/save_project.md) :
   Save a GeoLibre project
+- [`get_project()`](https://r.geolibre.app/reference/get_project.md) :
+  Read a project out of a widget
+- [`describe_project()`](https://r.geolibre.app/reference/describe_project.md)
+  : Summarize a GeoLibre project
+- [`to_html()`](https://r.geolibre.app/reference/to_html.md) : Export a
+  map as a standalone HTML page
+- [`redact_credentials()`](https://r.geolibre.app/reference/redact_credentials.md)
+  : Strip credentials from a whole project
+- [`redact_layer()`](https://r.geolibre.app/reference/redact_layer.md) :
+  Strip credentials from one layer
+- [`redact_url()`](https://r.geolibre.app/reference/redact_url.md) :
+  Strip credentials from a URL
 
 ## Shiny
+
+Render a widget, then drive the live map through a proxy.
 
 - [`geolibreOutput()`](https://r.geolibre.app/reference/geolibreOutput.md)
   [`renderGeolibre()`](https://r.geolibre.app/reference/geolibreOutput.md)
@@ -185,6 +470,27 @@ an optional distribution later.
   : Create a GeoLibre Shiny proxy
 - [`update_geolibre()`](https://r.geolibre.app/reference/update_geolibre.md)
   : Replace the project displayed by a GeoLibre Shiny widget
+- [`geolibre_command()`](https://r.geolibre.app/reference/geolibre_command.md)
+  : Send a command to a live GeoLibre map
+- [`geolibre_fly_to()`](https://r.geolibre.app/reference/geolibre_fly_to.md)
+  : Animate the camera of a live GeoLibre map
+- [`geolibre_fit_bounds()`](https://r.geolibre.app/reference/geolibre_fit_bounds.md)
+  : Fit a live GeoLibre map to a bounding box
+- [`geolibre_zoom_to_layer()`](https://r.geolibre.app/reference/geolibre_zoom_to_layer.md)
+  : Zoom a live GeoLibre map to a layer's extent
+- [`geolibre_get_view()`](https://r.geolibre.app/reference/geolibre_get_view.md)
+  : Read the camera of a live GeoLibre map
+- [`geolibre_identify()`](https://r.geolibre.app/reference/geolibre_identify.md)
+  : Identify features at a point on a live GeoLibre map
+- [`geolibre_layer_features()`](https://r.geolibre.app/reference/geolibre_layer_features.md)
+  [`geolibre_selected_features()`](https://r.geolibre.app/reference/geolibre_layer_features.md)
+  [`geolibre_drawn_features()`](https://r.geolibre.app/reference/geolibre_layer_features.md)
+  : Read features from a live GeoLibre map
+- [`geolibre_run_algorithm()`](https://r.geolibre.app/reference/geolibre_run_algorithm.md)
+  [`geolibre_list_algorithms()`](https://r.geolibre.app/reference/geolibre_run_algorithm.md)
+  : Run a processing algorithm on a live GeoLibre map
+- [`geolibre_to_image()`](https://r.geolibre.app/reference/geolibre_to_image.md)
+  : Capture a live GeoLibre map as a PNG
 
 # Articles
 

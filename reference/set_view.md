@@ -23,20 +23,36 @@ set_view(
 
 - center:
 
-  Optional longitude/latitude pair.
+  Optional `c(longitude, latitude)` pair.
 
-- zoom, bearing, pitch:
+- zoom:
 
-  Optional camera values.
+  Optional zoom level, clamped to between 0 and 24.
+
+- bearing:
+
+  Optional clockwise rotation in degrees.
+
+- pitch:
+
+  Optional tilt in degrees, clamped to between 0 and 85.
 
 - bbox:
 
-  Optional west/south/east/north bounds. When supplied it takes
-  precedence over `center` and `zoom`.
+  Optional `c(west, south, east, north)` bounds. When supplied it takes
+  precedence over `center` and `zoom`, and is resolved to a center and
+  zoom by
+  [`fit_bounds()`](https://r.geolibre.app/reference/fit_bounds.md).
 
 ## Value
 
 The modified widget.
+
+## See also
+
+[`fit_bounds()`](https://r.geolibre.app/reference/fit_bounds.md),
+[`set_center()`](https://r.geolibre.app/reference/set_center.md),
+[`set_zoom()`](https://r.geolibre.app/reference/set_zoom.md)
 
 ## Examples
 

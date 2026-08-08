@@ -1,0 +1,6 @@
+dependencies:
+  - name: geolibre-widget
+    version: 0.1.0
+    src: htmlwidgets
+    script: geolibre.js
+    stylesheet: geolibre.css

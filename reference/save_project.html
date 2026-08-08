@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">geolibre</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,7 +40,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">save_project</span><span class="op">(</span><span class="va">map</span>, <span class="va">path</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">save_project</span><span class="op">(</span><span class="va">map</span>, <span class="va">path</span>, keep_credentials <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -54,10 +54,20 @@
 <dt id="arg-path">path<a class="anchor" aria-label="anchor" href="#arg-path"></a></dt>
 <dd><p>Output path, conventionally ending in <code>.geolibre.json</code>.</p></dd>
 
+
+<dt id="arg-keep-credentials">keep_credentials<a class="anchor" aria-label="anchor" href="#arg-keep-credentials"></a></dt>
+<dd><p>Keep credential-bearing configuration such as layer
+request headers and signed URLs. Defaults to <code>FALSE</code>, so a saved project is
+safe to commit or share. See <code><a href="redact_credentials.html">redact_credentials()</a></code>.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p><code>path</code>, invisibly.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p><code><a href="load_project.html">load_project()</a></code>, <code><a href="redact_credentials.html">redact_credentials()</a></code></p></div>
     </div>
 
     <div class="section level2">

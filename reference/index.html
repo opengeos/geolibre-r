@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">geolibre</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,7 +33,7 @@
     </div>
 
     <div class="section level2">
-      <h2 id="create-maps">Create maps<a class="anchor" aria-label="anchor" href="#create-maps"></a></h2>
+      <h2 id="create-a-map">Create a map<a class="anchor" aria-label="anchor" href="#create-a-map"></a></h2>
 
 
 
@@ -48,8 +48,17 @@
 
         </dt>
         <dd>Create a GeoLibre widget</dd>
+      </dl></div><div class="section level2">
+      <h2 id="vector-layers">Vector layers<a class="anchor" aria-label="anchor" href="#vector-layers"></a></h2>
 
-        <dt>
+      <div class="section-desc"><p>Vector data from GeoJSON, <code>sf</code>, or any format the browser can stream.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
 
           <code><a href="add_geojson.html">add_geojson()</a></code>
 
@@ -65,6 +74,129 @@
 
         <dt>
 
+          <code><a href="add_data.html">add_data()</a></code>
+
+        </dt>
+        <dd>Add data, optionally symbolized by a column</dd>
+
+        <dt>
+
+          <code><a href="add_choropleth.html">add_choropleth()</a></code>
+
+        </dt>
+        <dd>Add a data-driven choropleth layer</dd>
+
+        <dt>
+
+          <code><a href="add_vector.html">add_vector()</a></code>
+
+        </dt>
+        <dd>Add a vector dataset from a URL or local file</dd>
+
+        <dt>
+
+          <code><a href="add_geoparquet.html">add_geoparquet()</a></code>
+
+        </dt>
+        <dd>Add a GeoParquet layer</dd>
+
+        <dt>
+
+          <code><a href="add_flatgeobuf.html">add_flatgeobuf()</a></code>
+
+        </dt>
+        <dd>Add a FlatGeobuf layer</dd>
+
+        <dt>
+
+          <code><a href="add_shp.html">add_shp()</a></code>
+
+        </dt>
+        <dd>Add a Shapefile layer</dd>
+
+        <dt>
+
+          <code><a href="add_kml.html">add_kml()</a></code>
+
+        </dt>
+        <dd>Add a KML or KMZ layer</dd>
+
+        <dt>
+
+          <code><a href="add_gpkg.html">add_gpkg()</a></code>
+
+        </dt>
+        <dd>Add a GeoPackage layer</dd>
+      </dl></div><div class="section level2">
+      <h2 id="points-and-markers">Points and markers<a class="anchor" aria-label="anchor" href="#points-and-markers"></a></h2>
+
+
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="add_marker.html">add_marker()</a></code>
+
+        </dt>
+        <dd>Add a single point marker</dd>
+
+        <dt>
+
+          <code><a href="add_markers.html">add_markers()</a></code>
+
+        </dt>
+        <dd>Add point markers</dd>
+
+        <dt>
+
+          <code><a href="add_circle_markers.html">add_circle_markers()</a></code>
+
+        </dt>
+        <dd>Add circle markers</dd>
+
+        <dt>
+
+          <code><a href="add_marker_cluster.html">add_marker_cluster()</a></code>
+
+        </dt>
+        <dd>Add clustered point markers</dd>
+
+        <dt>
+
+          <code><a href="add_heatmap.html">add_heatmap()</a></code>
+
+        </dt>
+        <dd>Add a point density heatmap</dd>
+
+        <dt>
+
+          <code><a href="add_xy_data.html">add_xy_data()</a></code>
+
+        </dt>
+        <dd>Add points from tabular longitude and latitude columns</dd>
+
+        <dt>
+
+          <code><a href="add_csv.html">add_csv()</a></code>
+
+        </dt>
+        <dd>Add a CSV of point coordinates</dd>
+      </dl></div><div class="section level2">
+      <h2 id="rasters-tiles-and-services">Rasters, tiles, and services<a class="anchor" aria-label="anchor" href="#rasters-tiles-and-services"></a></h2>
+
+
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
           <code><a href="add_raster.html">add_raster()</a></code>
 
         </dt>
@@ -72,12 +204,328 @@
 
         <dt>
 
+          <code><a href="add_cog.html">add_cog()</a></code>
+
+        </dt>
+        <dd>Add a Cloud Optimized GeoTIFF layer</dd>
+
+        <dt>
+
+          <code><a href="add_tile_layer.html">add_tile_layer()</a></code>
+
+        </dt>
+        <dd>Add an XYZ raster tile layer</dd>
+
+        <dt>
+
+          <code><a href="add_wms.html">add_wms()</a></code>
+
+        </dt>
+        <dd>Add a WMS layer</dd>
+
+        <dt>
+
+          <code><a href="add_wmts.html">add_wmts()</a></code>
+
+        </dt>
+        <dd>Add a WMTS layer</dd>
+
+        <dt>
+
+          <code><a href="add_wfs.html">add_wfs()</a></code>
+
+        </dt>
+        <dd>Add a WFS layer</dd>
+
+        <dt>
+
+          <code><a href="add_vector_tiles.html">add_vector_tiles()</a></code>
+
+        </dt>
+        <dd>Add a vector tile layer from a TileJSON endpoint</dd>
+
+        <dt>
+
+          <code><a href="add_pmtiles.html">add_pmtiles()</a></code>
+
+        </dt>
+        <dd>Add a PMTiles layer</dd>
+
+        <dt>
+
+          <code><a href="add_3d_tiles.html">add_3d_tiles()</a></code>
+
+        </dt>
+        <dd>Add a 3D Tiles layer</dd>
+
+        <dt>
+
+          <code><a href="add_video.html">add_video()</a></code>
+
+        </dt>
+        <dd>Add a georeferenced video layer</dd>
+      </dl></div><div class="section level2">
+      <h2 id="work-with-layers">Work with layers<a class="anchor" aria-label="anchor" href="#work-with-layers"></a></h2>
+
+      <div class="section-desc"><p>Every function here addresses a layer by its id or its name.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="get_layers.html">get_layers()</a></code>
+
+        </dt>
+        <dd>Summarize a project's layers</dd>
+
+        <dt>
+
+          <code><a href="get_layer.html">get_layer()</a></code>
+
+        </dt>
+        <dd>Read one layer's full definition</dd>
+
+        <dt>
+
+          <code><a href="layer_names.html">layer_names()</a></code>
+
+        </dt>
+        <dd>Layer names in draw order</dd>
+
+        <dt>
+
+          <code><a href="find_layer_index.html">find_layer_index()</a></code>
+
+        </dt>
+        <dd>Position of a layer in the draw order</dd>
+
+        <dt>
+
+          <code><a href="set_layer_visibility.html">set_layer_visibility()</a></code> <code><a href="set_layer_visibility.html">show_layer()</a></code> <code><a href="set_layer_visibility.html">hide_layer()</a></code>
+
+        </dt>
+        <dd>Show or hide a layer</dd>
+
+        <dt>
+
+          <code><a href="set_layer_opacity.html">set_layer_opacity()</a></code>
+
+        </dt>
+        <dd>Set a layer's opacity</dd>
+
+        <dt>
+
+          <code><a href="set_layer_style.html">set_layer_style()</a></code>
+
+        </dt>
+        <dd>Restyle a layer</dd>
+
+        <dt>
+
+          <code><a href="classify_layer.html">classify_layer()</a></code>
+
+        </dt>
+        <dd>Symbolize an existing layer as a choropleth</dd>
+
+        <dt>
+
+          <code><a href="rename_layer.html">rename_layer()</a></code>
+
+        </dt>
+        <dd>Rename a layer</dd>
+
+        <dt>
+
+          <code><a href="move_layer.html">move_layer()</a></code>
+
+        </dt>
+        <dd>Move a layer in the draw order</dd>
+
+        <dt>
+
+          <code><a href="duplicate_layer.html">duplicate_layer()</a></code>
+
+        </dt>
+        <dd>Duplicate a layer</dd>
+
+        <dt>
+
+          <code><a href="remove_layer.html">remove_layer()</a></code>
+
+        </dt>
+        <dd>Remove a layer</dd>
+
+        <dt>
+
+          <code><a href="clear_layers.html">clear_layers()</a></code>
+
+        </dt>
+        <dd>Remove every layer</dd>
+
+        <dt>
+
+          <code><a href="layer_properties.html">layer_properties()</a></code>
+
+        </dt>
+        <dd>Sample a layer's feature properties</dd>
+
+        <dt>
+
+          <code><a href="column_values.html">column_values()</a></code>
+
+        </dt>
+        <dd>Read one feature property across a layer</dd>
+      </dl></div><div class="section level2">
+      <h2 id="camera-and-basemap">Camera and basemap<a class="anchor" aria-label="anchor" href="#camera-and-basemap"></a></h2>
+
+
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
           <code><a href="set_view.html">set_view()</a></code>
 
         </dt>
         <dd>Set the GeoLibre camera</dd>
+
+        <dt>
+
+          <code><a href="set_center.html">set_center()</a></code>
+
+        </dt>
+        <dd>Center the map</dd>
+
+        <dt>
+
+          <code><a href="set_zoom.html">set_zoom()</a></code>
+
+        </dt>
+        <dd>Set the map zoom</dd>
+
+        <dt>
+
+          <code><a href="set_bearing.html">set_bearing()</a></code>
+
+        </dt>
+        <dd>Set the camera bearing</dd>
+
+        <dt>
+
+          <code><a href="set_pitch.html">set_pitch()</a></code>
+
+        </dt>
+        <dd>Set the camera pitch</dd>
+
+        <dt>
+
+          <code><a href="fit_bounds.html">fit_bounds()</a></code>
+
+        </dt>
+        <dd>Frame a bounding box</dd>
+
+        <dt>
+
+          <code><a href="set_basemap.html">set_basemap()</a></code> <code><a href="set_basemap.html">add_basemap()</a></code>
+
+        </dt>
+        <dd>Set the background basemap</dd>
+
+        <dt>
+
+          <code><a href="set_project_name.html">set_project_name()</a></code>
+
+        </dt>
+        <dd>Set the project name</dd>
       </dl></div><div class="section level2">
-      <h2 id="project-files">Project files<a class="anchor" aria-label="anchor" href="#project-files"></a></h2>
+      <h2 id="map-controls">Map controls<a class="anchor" aria-label="anchor" href="#map-controls"></a></h2>
+
+
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="add_legend.html">add_legend()</a></code>
+
+        </dt>
+        <dd>Add a legend to the map</dd>
+
+        <dt>
+
+          <code><a href="add_colorbar.html">add_colorbar()</a></code>
+
+        </dt>
+        <dd>Add a colorbar to the map</dd>
+
+        <dt>
+
+          <code><a href="add_colormap.html">add_colormap()</a></code>
+
+        </dt>
+        <dd>Add a colorbar from a named color ramp</dd>
+
+        <dt>
+
+          <code><a href="split_map.html">split_map()</a></code>
+
+        </dt>
+        <dd>Add a split-map comparison slider</dd>
+      </dl></div><div class="section level2">
+      <h2 id="catalogs">Catalogs<a class="anchor" aria-label="anchor" href="#catalogs"></a></h2>
+
+      <div class="section-desc"><p>The basemaps, color ramps, and legend presets the application ships.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="basemaps.html">basemaps()</a></code>
+
+        </dt>
+        <dd>Named GeoLibre basemaps</dd>
+
+        <dt>
+
+          <code><a href="color_ramp_names.html">color_ramp_names()</a></code>
+
+        </dt>
+        <dd>Available color ramp names</dd>
+
+        <dt>
+
+          <code><a href="get_color_ramp.html">get_color_ramp()</a></code>
+
+        </dt>
+        <dd>Anchor colors of a color ramp</dd>
+
+        <dt>
+
+          <code><a href="interpolate_ramp_colors.html">interpolate_ramp_colors()</a></code>
+
+        </dt>
+        <dd>Sample a color ramp into evenly spaced colors</dd>
+
+        <dt>
+
+          <code><a href="builtin_legend_names.html">builtin_legend_names()</a></code>
+
+        </dt>
+        <dd>Built-in legend preset names</dd>
+      </dl></div><div class="section level2">
+      <h2 id="projects-and-export">Projects and export<a class="anchor" aria-label="anchor" href="#projects-and-export"></a></h2>
 
 
 
@@ -99,10 +547,52 @@
 
         </dt>
         <dd>Save a GeoLibre project</dd>
+
+        <dt>
+
+          <code><a href="get_project.html">get_project()</a></code>
+
+        </dt>
+        <dd>Read a project out of a widget</dd>
+
+        <dt>
+
+          <code><a href="describe_project.html">describe_project()</a></code>
+
+        </dt>
+        <dd>Summarize a GeoLibre project</dd>
+
+        <dt>
+
+          <code><a href="to_html.html">to_html()</a></code>
+
+        </dt>
+        <dd>Export a map as a standalone HTML page</dd>
+
+        <dt>
+
+          <code><a href="redact_credentials.html">redact_credentials()</a></code>
+
+        </dt>
+        <dd>Strip credentials from a whole project</dd>
+
+        <dt>
+
+          <code><a href="redact_layer.html">redact_layer()</a></code>
+
+        </dt>
+        <dd>Strip credentials from one layer</dd>
+
+        <dt>
+
+          <code><a href="redact_url.html">redact_url()</a></code>
+
+        </dt>
+        <dd>Strip credentials from a URL</dd>
       </dl></div><div class="section level2">
       <h2 id="shiny">Shiny<a class="anchor" aria-label="anchor" href="#shiny"></a></h2>
 
-
+      <div class="section-desc"><p>Render a widget, then drive the live map through a proxy.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -129,6 +619,69 @@
 
         </dt>
         <dd>Replace the project displayed by a GeoLibre Shiny widget</dd>
+
+        <dt>
+
+          <code><a href="geolibre_command.html">geolibre_command()</a></code>
+
+        </dt>
+        <dd>Send a command to a live GeoLibre map</dd>
+
+        <dt>
+
+          <code><a href="geolibre_fly_to.html">geolibre_fly_to()</a></code>
+
+        </dt>
+        <dd>Animate the camera of a live GeoLibre map</dd>
+
+        <dt>
+
+          <code><a href="geolibre_fit_bounds.html">geolibre_fit_bounds()</a></code>
+
+        </dt>
+        <dd>Fit a live GeoLibre map to a bounding box</dd>
+
+        <dt>
+
+          <code><a href="geolibre_zoom_to_layer.html">geolibre_zoom_to_layer()</a></code>
+
+        </dt>
+        <dd>Zoom a live GeoLibre map to a layer's extent</dd>
+
+        <dt>
+
+          <code><a href="geolibre_get_view.html">geolibre_get_view()</a></code>
+
+        </dt>
+        <dd>Read the camera of a live GeoLibre map</dd>
+
+        <dt>
+
+          <code><a href="geolibre_identify.html">geolibre_identify()</a></code>
+
+        </dt>
+        <dd>Identify features at a point on a live GeoLibre map</dd>
+
+        <dt>
+
+          <code><a href="geolibre_layer_features.html">geolibre_layer_features()</a></code> <code><a href="geolibre_layer_features.html">geolibre_selected_features()</a></code> <code><a href="geolibre_layer_features.html">geolibre_drawn_features()</a></code>
+
+        </dt>
+        <dd>Read features from a live GeoLibre map</dd>
+
+        <dt>
+
+          <code><a href="geolibre_run_algorithm.html">geolibre_run_algorithm()</a></code> <code><a href="geolibre_run_algorithm.html">geolibre_list_algorithms()</a></code>
+
+        </dt>
+        <dd>Run a processing algorithm on a live GeoLibre map</dd>
+
+        <dt>
+
+          <code><a href="geolibre_to_image.html">geolibre_to_image()</a></code>
+
+        </dt>
+        <dd>Capture a live GeoLibre map as a PNG</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

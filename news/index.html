@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">geolibre</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,6 +34,55 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.0" id="geolibre-020">geolibre 0.2.0<a class="anchor" aria-label="anchor" href="#geolibre-020"></a></h2>
+<p>This release brings the R API to parity with the GeoLibre Python API. The package now covers every layer type the application reads, layer management, data-driven symbology, on-map controls, standalone HTML export, and a Shiny proxy that drives the live map.</p>
+<div class="section level3">
+<h3 id="new-layer-types-0-2-0">New layer types<a class="anchor" aria-label="anchor" href="#new-layer-types-0-2-0"></a></h3>
+<ul><li>Add <code><a href="../reference/add_cog.html">add_cog()</a></code> and keep <code><a href="../reference/add_raster.html">add_raster()</a></code> as its generically named alias.</li>
+<li>Add XYZ raster tiles with <code><a href="../reference/add_tile_layer.html">add_tile_layer()</a></code>.</li>
+<li>Add OGC services with <code><a href="../reference/add_wms.html">add_wms()</a></code>, <code><a href="../reference/add_wmts.html">add_wmts()</a></code>, and <code><a href="../reference/add_wfs.html">add_wfs()</a></code>.</li>
+<li>Add <code><a href="../reference/add_vector.html">add_vector()</a></code> for any format the in-browser vector control streams, with <code><a href="../reference/add_geoparquet.html">add_geoparquet()</a></code>, <code><a href="../reference/add_flatgeobuf.html">add_flatgeobuf()</a></code>, <code><a href="../reference/add_shp.html">add_shp()</a></code>, <code><a href="../reference/add_kml.html">add_kml()</a></code>, and <code><a href="../reference/add_gpkg.html">add_gpkg()</a></code> wrappers. Local files are read with <code>sf</code> and inlined instead.</li>
+<li>Add <code><a href="../reference/add_vector_tiles.html">add_vector_tiles()</a></code>, <code><a href="../reference/add_pmtiles.html">add_pmtiles()</a></code>, <code><a href="../reference/add_3d_tiles.html">add_3d_tiles()</a></code>, and <code><a href="../reference/add_video.html">add_video()</a></code>.</li>
+<li>Add points from coordinates, matrices, data frames, or CSV with <code><a href="../reference/add_marker.html">add_marker()</a></code>, <code><a href="../reference/add_markers.html">add_markers()</a></code>, <code><a href="../reference/add_circle_markers.html">add_circle_markers()</a></code>, <code><a href="../reference/add_marker_cluster.html">add_marker_cluster()</a></code>, <code><a href="../reference/add_heatmap.html">add_heatmap()</a></code>, <code><a href="../reference/add_xy_data.html">add_xy_data()</a></code>, and <code><a href="../reference/add_csv.html">add_csv()</a></code>.</li>
+<li>Add <code><a href="../reference/add_geojson.html">add_geojson()</a></code> support for HTTP(S) URLs and <code>sfc</code>/<code>sfg</code> objects, and <code><a href="../reference/add_data.html">add_data()</a></code> for column-driven symbology in one call.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="symbology-and-layer-management-0-2-0">Symbology and layer management<a class="anchor" aria-label="anchor" href="#symbology-and-layer-management-0-2-0"></a></h3>
+<ul><li>Add <code><a href="../reference/add_choropleth.html">add_choropleth()</a></code> and <code><a href="../reference/classify_layer.html">classify_layer()</a></code>, which compute the same graduated <code>vectorStyleStops</code> the application’s Style panel produces, using equal-interval or quantile classification.</li>
+<li>Add the color ramp catalog: <code><a href="../reference/color_ramp_names.html">color_ramp_names()</a></code>, <code><a href="../reference/get_color_ramp.html">get_color_ramp()</a></code>, and <code><a href="../reference/interpolate_ramp_colors.html">interpolate_ramp_colors()</a></code>.</li>
+<li>Add <code><a href="../reference/get_layers.html">get_layers()</a></code>, <code><a href="../reference/get_layer.html">get_layer()</a></code>, <code><a href="../reference/layer_names.html">layer_names()</a></code>, and <code><a href="../reference/find_layer_index.html">find_layer_index()</a></code> for inspection, and <code><a href="../reference/layer_properties.html">layer_properties()</a></code> and <code><a href="../reference/column_values.html">column_values()</a></code> for reading feature attributes back.</li>
+<li>Add <code><a href="../reference/set_layer_visibility.html">set_layer_visibility()</a></code>, <code><a href="../reference/set_layer_visibility.html">show_layer()</a></code>, <code><a href="../reference/set_layer_visibility.html">hide_layer()</a></code>, <code><a href="../reference/set_layer_opacity.html">set_layer_opacity()</a></code>, <code><a href="../reference/set_layer_style.html">set_layer_style()</a></code>, <code><a href="../reference/rename_layer.html">rename_layer()</a></code>, <code><a href="../reference/move_layer.html">move_layer()</a></code>, <code><a href="../reference/duplicate_layer.html">duplicate_layer()</a></code>, <code><a href="../reference/remove_layer.html">remove_layer()</a></code>, and <code><a href="../reference/clear_layers.html">clear_layers()</a></code>. Each accepts a layer id or a layer name.</li>
+<li>Every <code>add_*()</code> function now accepts style overrides as named arguments as well as through <code>style</code>, so <code>add_geojson(map, data, fillColor = "red")</code> works.</li>
+<li>Layers now carry the application’s full default style, so a project round-trips without the application filling in gaps differently.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="map-controls-and-the-camera-0-2-0">Map controls and the camera<a class="anchor" aria-label="anchor" href="#map-controls-and-the-camera-0-2-0"></a></h3>
+<ul><li>Add <code><a href="../reference/add_legend.html">add_legend()</a></code> from a named vector, parallel label and color vectors, or a built-in preset; <code><a href="../reference/builtin_legend_names.html">builtin_legend_names()</a></code> lists the presets.</li>
+<li>Add <code><a href="../reference/add_colorbar.html">add_colorbar()</a></code> and <code><a href="../reference/add_colormap.html">add_colormap()</a></code> for continuous rasters, from a named ramp or a custom gradient.</li>
+<li>Add <code><a href="../reference/split_map.html">split_map()</a></code> for before-and-after swipe comparisons.</li>
+<li>Add <code><a href="../reference/set_center.html">set_center()</a></code>, <code><a href="../reference/set_zoom.html">set_zoom()</a></code>, <code><a href="../reference/set_bearing.html">set_bearing()</a></code>, <code><a href="../reference/set_pitch.html">set_pitch()</a></code>, and <code><a href="../reference/fit_bounds.html">fit_bounds()</a></code>, which frames a bounding box and handles boxes that cross the antimeridian.</li>
+<li>Add <code><a href="../reference/set_basemap.html">set_basemap()</a></code> and <code><a href="../reference/set_basemap.html">add_basemap()</a></code>, plus the <code><a href="../reference/basemaps.html">basemaps()</a></code> catalog. <code><a href="../reference/geolibre.html">geolibre()</a></code> also takes <code>center</code>, <code>zoom</code>, <code>basemap</code>, and <code>name</code> directly.</li>
+<li>Add <code>layout</code> and <code>theme</code> arguments to <code><a href="../reference/geolibre.html">geolibre()</a></code>. <code>layout = "full"</code> shows the complete desktop interface. <code>map_only</code> is superseded by <code>layout = "maponly"</code> and still works.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="projects-export-and-credentials-0-2-0">Projects, export, and credentials<a class="anchor" aria-label="anchor" href="#projects-export-and-credentials-0-2-0"></a></h3>
+<ul><li>Add <code><a href="../reference/to_html.html">to_html()</a></code>, which writes a standalone page that needs no running R session.</li>
+<li>Add <code><a href="../reference/get_project.html">get_project()</a></code> and <code><a href="../reference/describe_project.html">describe_project()</a></code>, and <code><a href="../reference/set_project_name.html">set_project_name()</a></code>.</li>
+<li>Add <code><a href="../reference/redact_credentials.html">redact_credentials()</a></code>, <code><a href="../reference/redact_layer.html">redact_layer()</a></code>, and <code><a href="../reference/redact_url.html">redact_url()</a></code>. <code><a href="../reference/save_project.html">save_project()</a></code> now strips credentials by default; pass <code>keep_credentials = TRUE</code> for a trusted local file.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="shiny-0-2-0">Shiny<a class="anchor" aria-label="anchor" href="#shiny-0-2-0"></a></h3>
+<ul><li>Add a command bridge so a proxy can drive the live map: <code><a href="../reference/geolibre_fly_to.html">geolibre_fly_to()</a></code>, <code><a href="../reference/geolibre_fit_bounds.html">geolibre_fit_bounds()</a></code>, <code><a href="../reference/geolibre_zoom_to_layer.html">geolibre_zoom_to_layer()</a></code>, <code><a href="../reference/geolibre_get_view.html">geolibre_get_view()</a></code>, <code><a href="../reference/geolibre_identify.html">geolibre_identify()</a></code>, <code><a href="../reference/geolibre_layer_features.html">geolibre_layer_features()</a></code>, <code><a href="../reference/geolibre_layer_features.html">geolibre_selected_features()</a></code>, <code><a href="../reference/geolibre_layer_features.html">geolibre_drawn_features()</a></code>, <code><a href="../reference/geolibre_run_algorithm.html">geolibre_list_algorithms()</a></code>, <code><a href="../reference/geolibre_run_algorithm.html">geolibre_run_algorithm()</a></code>, <code><a href="../reference/geolibre_to_image.html">geolibre_to_image()</a></code>, and the general <code><a href="../reference/geolibre_command.html">geolibre_command()</a></code>.</li>
+<li>Replies arrive on <code>input$&lt;outputId&gt;_result</code> and user interaction on <code>input$&lt;outputId&gt;_event</code>, alongside the existing <code>_project</code> and <code>_error</code> inputs.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-2-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-2-0"></a></h3>
+<ul><li>
+<code>set_view(bbox = )</code> wrote an unknown <code>bounds</code> field that the application ignored, so the requested extent was silently dropped. It now resolves the box to the <code>center</code>, <code>zoom</code>, and <code>bbox</code> the application reads.</li>
+<li>The default camera now matches the application’s own, <code>c(-100, 40)</code> at zoom 2, rather than <code>c(0, 20)</code>.</li>
+</ul></div>
+</div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="geolibre-010">geolibre 0.1.0<a class="anchor" aria-label="anchor" href="#geolibre-010"></a></h2>
 <p>Initial CRAN release.</p>
 <ul><li>Add a responsive <code>htmlwidgets</code> interface to GeoLibre for RStudio, Quarto, R Markdown, and Shiny.</li>
@@ -42,7 +91,8 @@
 <li>Add Shiny output, render, proxy, and live project-state bindings.</li>
 <li>Support hosted and self-hosted GeoLibre deployments.</li>
 </ul></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">

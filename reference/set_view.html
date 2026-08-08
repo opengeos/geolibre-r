@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">geolibre</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,21 +59,34 @@
 
 
 <dt id="arg-center">center<a class="anchor" aria-label="anchor" href="#arg-center"></a></dt>
-<dd><p>Optional longitude/latitude pair.</p></dd>
+<dd><p>Optional <code>c(longitude, latitude)</code> pair.</p></dd>
 
 
-<dt id="arg-zoom-bearing-pitch">zoom, bearing, pitch<a class="anchor" aria-label="anchor" href="#arg-zoom-bearing-pitch"></a></dt>
-<dd><p>Optional camera values.</p></dd>
+<dt id="arg-zoom">zoom<a class="anchor" aria-label="anchor" href="#arg-zoom"></a></dt>
+<dd><p>Optional zoom level, clamped to between 0 and 24.</p></dd>
+
+
+<dt id="arg-bearing">bearing<a class="anchor" aria-label="anchor" href="#arg-bearing"></a></dt>
+<dd><p>Optional clockwise rotation in degrees.</p></dd>
+
+
+<dt id="arg-pitch">pitch<a class="anchor" aria-label="anchor" href="#arg-pitch"></a></dt>
+<dd><p>Optional tilt in degrees, clamped to between 0 and 85.</p></dd>
 
 
 <dt id="arg-bbox">bbox<a class="anchor" aria-label="anchor" href="#arg-bbox"></a></dt>
-<dd><p>Optional west/south/east/north bounds. When supplied it takes
-precedence over <code>center</code> and <code>zoom</code>.</p></dd>
+<dd><p>Optional <code>c(west, south, east, north)</code> bounds. When supplied it
+takes precedence over <code>center</code> and <code>zoom</code>, and is resolved to a center and
+zoom by <code><a href="fit_bounds.html">fit_bounds()</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>The modified widget.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p><code><a href="fit_bounds.html">fit_bounds()</a></code>, <code><a href="set_center.html">set_center()</a></code>, <code><a href="set_zoom.html">set_zoom()</a></code></p></div>
     </div>
 
     <div class="section level2">

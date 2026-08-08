@@ -1,6 +1,8 @@
 # Add an `sf` object to a GeoLibre map
 
-The object is transformed to EPSG:4326 before serialization.
+The object is transformed to EPSG:4326 before serialization. An object
+with no CRS is taken to be in longitude/latitude order already, since
+that is what GeoJSON means.
 
 ## Usage
 
@@ -8,10 +10,11 @@ The object is transformed to EPSG:4326 before serialization.
 add_sf(
   map,
   data,
-  name = deparse(substitute(data)),
+  name = NULL,
   style = list(),
   visible = TRUE,
-  opacity = 1
+  opacity = 1,
+  ...
 )
 ```
 
@@ -23,11 +26,11 @@ add_sf(
 
 - data:
 
-  An `sf` or `sfc` object.
+  An `sf`, `sfc`, or `sfg` object.
 
 - name:
 
-  Layer name.
+  Layer name. Defaults to the expression passed as `data`.
 
 - style:
 
@@ -41,6 +44,13 @@ add_sf(
 - opacity:
 
   Layer opacity from zero to one.
+
+- ...:
+
+  Additional style overrides given as named arguments, merged into
+  `style`. `add_geojson(map, data, fillColor = "red")` and
+  `add_geojson(map, data, style = list(fillColor = "red"))` are
+  equivalent.
 
 ## Value
 

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">geolibre</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,6 +69,23 @@
 <dd><p>Whether <code>expr</code> is quoted.</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p><code>geolibreOutput()</code> returns a Shiny output element;
+<code>renderGeolibre()</code> returns a render function for it.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="shiny-inputs">Shiny inputs<a class="anchor" aria-label="anchor" href="#shiny-inputs"></a></h2>
+
+
+<p>A rendered widget reports back through four inputs, where <code>id</code> is the
+<code>outputId</code>:</p><ul><li><p><code>input$id_project</code> — the full project each time the user edits the map.</p></li>
+<li><p><code>input$id_error</code> — the message from a project the application rejected.</p></li>
+<li><p><code>input$id_result</code> — the reply to a proxy command; a list with <code>requestId</code>,
+<code>method</code>, <code>ok</code>, and then <code>value</code> or <code>error</code>.</p></li>
+<li><p><code>input$id_event</code> — user interaction; a list with <code>event</code>, one of <code>"click"</code>,
+<code>"selection-change"</code>, or <code>"layer-change"</code>, and its <code>payload</code>.</p></li>
+</ul></div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>

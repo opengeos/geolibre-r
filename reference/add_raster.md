@@ -1,6 +1,7 @@
 # Add a remote raster to a GeoLibre map
 
-Add a remote raster to a GeoLibre map
+[`add_cog()`](https://r.geolibre.app/reference/add_cog.md) with a
+generic default layer name.
 
 ## Usage
 
@@ -14,7 +15,8 @@ add_raster(
   rescale = NULL,
   style = list(),
   visible = TRUE,
-  opacity = 1
+  opacity = 1,
+  ...
 )
 ```
 
@@ -34,27 +36,37 @@ add_raster(
 
 - bands:
 
-  Optional one-based band indices.
+  Optional one-based band indices. Three or more bands render as RGB;
+  one renders as a single band, which `colormap` then colors.
 
 - colormap:
 
-  Optional GeoLibre colormap name.
+  Optional GeoLibre colormap name for single-band rendering.
 
 - rescale:
 
-  Optional list of numeric `[min, max]` ranges.
+  Optional list of numeric `c(min, max)` ranges, one per rendered band.
+  A single `c(min, max)` pair is accepted for the one-band case.
 
 - style:
 
-  Named list of style overrides.
+  Named list of GeoLibre style overrides such as `fillColor`,
+  `strokeColor`, and `strokeWidth`.
 
 - visible:
 
-  Whether the layer is visible.
+  Whether the layer is initially visible.
 
 - opacity:
 
   Layer opacity from zero to one.
+
+- ...:
+
+  Additional style overrides given as named arguments, merged into
+  `style`. `add_geojson(map, data, fillColor = "red")` and
+  `add_geojson(map, data, style = list(fillColor = "red"))` are
+  equivalent.
 
 ## Value
 

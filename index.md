@@ -38,14 +38,14 @@ points <- list(
   ))
 )
 
-geolibre(map_only = TRUE) |>
-  add_geojson(
-    points,
-    name = "Places",
-    style = list(fillColor = "#dc2626", circleRadius = 8)
-  ) |>
+geolibre(layout = "maponly") |>
+  add_geojson(points, name = "Places", fillColor = "#dc2626", circleRadius = 8) |>
   set_view(center = c(-77.0369, 38.9072), zoom = 10)
 ```
+
+Style overrides can be passed as named arguments, as above, or as a
+`style` list. Every `add_*()`, `set_*()`, and control function takes the
+map first and returns it, so calls compose with the pipe.
 
 ### `sf`
 
@@ -62,7 +62,51 @@ geolibre() |>
   add_sf(nc, "North Carolina counties")
 ```
 
-### Remote rasters
+### Points, markers, and tables
+
+``` r
+
+cities <- data.frame(
+  name = c("Washington", "New York", "Boston"),
+  longitude = c(-77.0369, -74.0060, -71.0589),
+  latitude = c(38.9072, 40.7128, 42.3601)
+)
+
+geolibre() |>
+  add_xy_data(cities, name = "Cities", circleRadius = 8) |>
+  fit_bounds(c(-78, 38, -70, 43))
+```
+
+[`add_markers()`](https://r.geolibre.app/reference/add_markers.md),
+[`add_circle_markers()`](https://r.geolibre.app/reference/add_circle_markers.md),
+[`add_marker_cluster()`](https://r.geolibre.app/reference/add_marker_cluster.md),
+and [`add_heatmap()`](https://r.geolibre.app/reference/add_heatmap.md)
+accept the same points in any of several shapes: a list of
+`c(longitude, latitude)` pairs, a two-column matrix, a data frame, point
+GeoJSON, or an `sf` object.
+[`add_csv()`](https://r.geolibre.app/reference/add_csv.md) reads a path,
+a URL, or CSV text.
+
+### Choropleths
+
+[`add_choropleth()`](https://r.geolibre.app/reference/add_choropleth.md)
+classifies a numeric column and colors it from a named ramp, computing
+the same stops the application’s Style panel does.
+
+``` r
+
+geolibre() |>
+  add_choropleth(nc, column = "BIR74", colormap = "blues", class_count = 6) |>
+  add_legend("Births", legend = c(Low = "#eff6ff", High = "#1e3a8a"))
+```
+
+See
+[`color_ramp_names()`](https://r.geolibre.app/reference/color_ramp_names.md)
+for the available ramps and
+[`basemaps()`](https://r.geolibre.app/reference/basemaps.md) for the
+named basemap styles.
+
+### Rasters, tiles, and services
 
 Remote Cloud Optimized GeoTIFFs are read directly by GeoLibre in the
 browser. The server must support CORS and HTTP range requests.
@@ -70,11 +114,52 @@ browser. The server must support CORS and HTTP range requests.
 ``` r
 
 geolibre() |>
-  add_raster(
-    "https://example.org/visual.tif",
-    name = "Satellite image",
-    bands = c(1, 2, 3)
-  )
+  add_raster("https://example.org/visual.tif", name = "Satellite", bands = c(1, 2, 3)) |>
+  add_tile_layer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", name = "OSM") |>
+  add_wms("https://example.org/geoserver/wms", layers = "topp:states") |>
+  add_pmtiles("https://example.org/buildings.pmtiles") |>
+  add_3d_tiles("https://example.org/tileset.json")
+```
+
+[`add_vector()`](https://r.geolibre.app/reference/add_vector.md) hands a
+URL to the application’s in-browser vector control, so GeoParquet,
+FlatGeobuf, zipped Shapefiles, and GeoPackages stream without being
+inlined in the project. A local path is read with `sf` instead.
+
+``` r
+
+geolibre() |> add_geoparquet("https://example.org/parcels.parquet")
+```
+
+### Managing layers
+
+``` r
+
+map <- geolibre() |>
+  add_raster("https://example.org/before.tif", name = "Before") |>
+  add_raster("https://example.org/after.tif", name = "After")
+
+get_layers(map)                      # one row per layer
+map |>
+  set_layer_opacity("Before", 0.6) |>
+  move_layer("After", 1) |>
+  split_map("Before", "After")       # a swipe comparison slider
+```
+
+Layers are addressed by name or by id.
+[`layer_properties()`](https://r.geolibre.app/reference/layer_properties.md)
+and
+[`column_values()`](https://r.geolibre.app/reference/column_values.md)
+read attributes back out of an inlined vector layer.
+
+### Standalone HTML
+
+[`to_html()`](https://r.geolibre.app/reference/to_html.md) writes a
+self-contained page that needs no running R session.
+
+``` r
+
+to_html(map, "map.html", title = "Before and after")
 ```
 
 ### Project files
@@ -88,10 +173,14 @@ restored <- geolibre(load_project("example.geolibre.json"))
 ```
 
 The saved file uses GeoLibre’s portable `.geolibre.json` format and can
-be opened in the web or desktop application.
+be opened in the web or desktop application, or in the Python API.
 [`save_project()`](https://r.geolibre.app/reference/save_project.md)
-saves the state held by the R widget. In Shiny, browser-side changes are
-also available as `input$<outputId>_project`.
+saves the state held by the R widget and strips credentials such as
+layer request headers and signed URLs; pass `keep_credentials = TRUE`
+for a trusted local file.
+[`describe_project()`](https://r.geolibre.app/reference/describe_project.md)
+summarizes a project without printing its inlined data. In Shiny,
+browser-side changes are also available as `input$<outputId>_project`.
 
 ## Shiny
 
@@ -106,22 +195,52 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-  map <- reactiveVal(geolibre(map_only = TRUE))
+  map <- reactiveVal(geolibre(layout = "maponly"))
   output$map <- renderGeolibre(map())
 
+  # Replace the whole project.
   observeEvent(input$reset, {
     next_map <- set_view(map(), center = c(0, 20), zoom = 2)
     map(next_map)
     update_geolibre(geolibre_proxy("map"), next_map)
   })
 
+  # Or drive the map that is already on screen, without re-rendering it.
+  observeEvent(input$fly, {
+    geolibre_fly_to(geolibre_proxy("map"), center = c(-77.0369, 38.9072), zoom = 12)
+  })
+
   observeEvent(input$map_project, {
     message("GeoLibre now has ", length(input$map_project$layers), " layers")
+  })
+
+  # Where a command's reply lands.
+  observeEvent(input$map_result, {
+    message(input$map_result$method, " -> ok = ", input$map_result$ok)
+  })
+
+  # Clicks, selection changes, and layer changes from the browser.
+  observeEvent(input$map_event, {
+    message("event: ", input$map_event$event)
   })
 }
 
 shinyApp(ui, server)
 ```
+
+The proxy functions cover the things a project cannot express:
+[`geolibre_fly_to()`](https://r.geolibre.app/reference/geolibre_fly_to.md),
+[`geolibre_fit_bounds()`](https://r.geolibre.app/reference/geolibre_fit_bounds.md),
+[`geolibre_zoom_to_layer()`](https://r.geolibre.app/reference/geolibre_zoom_to_layer.md),
+[`geolibre_get_view()`](https://r.geolibre.app/reference/geolibre_get_view.md),
+[`geolibre_identify()`](https://r.geolibre.app/reference/geolibre_identify.md),
+[`geolibre_layer_features()`](https://r.geolibre.app/reference/geolibre_layer_features.md),
+[`geolibre_to_image()`](https://r.geolibre.app/reference/geolibre_to_image.md),
+and
+[`geolibre_run_algorithm()`](https://r.geolibre.app/reference/geolibre_run_algorithm.md)
+for the application’s browser-side processing tools.
+[`geolibre_command()`](https://r.geolibre.app/reference/geolibre_command.md)
+forwards anything else the bridge implements.
 
 ## Self-hosted GeoLibre
 
@@ -135,13 +254,20 @@ options(geolibre.app_url = "https://gis.example.org/")
 The deployment must expose the GeoLibre web app and support its
 `?embed=1` project bridge.
 
-## Current scope
+## Scope
 
-- GeoJSON and `sf` vector layers
-- Remote COG/GeoTIFF raster layers
-- Camera control
-- GeoLibre project import and export
-- R Markdown, Quarto, RStudio Viewer, and Shiny support
+- Vector layers from GeoJSON, `sf`, GeoParquet, FlatGeobuf, Shapefiles,
+  GeoPackage, KML, and CSV or data frame coordinates
+- Markers, circle markers, clusters, and heatmaps
+- Rasters (COG/GeoTIFF), XYZ tiles, WMS, WMTS, WFS, vector tiles,
+  PMTiles, 3D Tiles, and georeferenced video
+- Choropleth classification, layer styling, ordering, and inspection
+- Legends, colorbars, and split-map comparisons
+- Camera control, basemaps, and bounding-box fitting
+- Project import and export, credential redaction, and standalone HTML
+  export
+- R Markdown, Quarto, RStudio Viewer, and Shiny support, with a proxy
+  that drives the live map
 - Configurable hosted or self-hosted GeoLibre application
 
 The package intentionally does not bundle GeoLibre’s large web
