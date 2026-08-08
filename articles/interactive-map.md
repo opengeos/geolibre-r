@@ -163,8 +163,8 @@ map <- geolibre() |>
 
 get_layers(map)
 #>                                     id          name    type visible opacity
-#> 1 fec0a74c-6bc2-44cf-bea1-342d8db11606       Capital geojson    TRUE       1
-#> 2 fd03dde3-dfbb-4bc4-8085-53f0413e79f7 OpenStreetMap     xyz    TRUE       1
+#> 1 db4d97e9-ab9c-4682-9f0c-13599d1f32a6       Capital geojson    TRUE       1
+#> 2 69729c13-9a83-46d3-9d36-f9c1620e2509 OpenStreetMap     xyz    TRUE       1
 #>                                           source features
 #> 1                                           <NA>        1
 #> 2 https://tile.openstreetmap.org/{z}/{x}/{y}.png       NA
