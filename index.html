@@ -50,24 +50,24 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="geolibre">geolibre<a class="anchor" aria-label="anchor" href="#geolibre"></a>
 </h1></div>
-<p><a href="https://github.com/opengeos/geolibre-r/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/opengeos/geolibre-r/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> <a href="https://web.geolibre.app/" class="external-link"><img src="https://img.shields.io/badge/GeoLibre-web-16a34a" alt="GeoLibre"></a></p>
+<p><a href="https://CRAN.R-project.org/package=geolibre" class="external-link"><img src="https://www.r-pkg.org/badges/version/geolibre" alt="CRAN status"></a> <a href="https://CRAN.R-project.org/package=geolibre" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/geolibre" alt="CRAN downloads"></a> <a href="https://github.com/opengeos/geolibre-r/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/opengeos/geolibre-r/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> <a href="https://web.geolibre.app/" class="external-link"><img src="https://img.shields.io/badge/GeoLibre-web-16a34a" alt="GeoLibre"></a></p>
 <p><code>geolibre</code> brings the full <a href="https://geolibre.app/" class="external-link">GeoLibre</a> GIS application to RStudio, Quarto, R Markdown, and Shiny. It is an <code>htmlwidgets</code> interface to GeoLibre’s project format and embed bridge.</p>
 <p><a href="https://r.geolibre.app/articles/interactive-map.html">Open the live interactive map example</a> to try the R widget directly in your browser.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
+<p>Install the released version from <a href="https://CRAN.R-project.org/package=geolibre" class="external-link">CRAN</a>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Once released on CRAN:</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"geolibre"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Development version:</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"pak"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"geolibre"</span><span class="op">)</span></span></code></pre></div>
+<p>Or the development version from GitHub:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"pak"</span><span class="op">)</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"opengeos/geolibre-r"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r.geolibre.app">geolibre</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -88,7 +88,7 @@
 <code>sf</code><a class="anchor" aria-label="anchor" href="#sf"></a>
 </h3>
 <p><code><a href="reference/add_sf.html">add_sf()</a></code> transforms data to WGS 84 before sending GeoJSON to the browser.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">nc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"shape/nc.shp"</span>, package <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -99,7 +99,7 @@
 <div class="section level3">
 <h3 id="points-markers-and-tables">Points, markers, and tables<a class="anchor" aria-label="anchor" href="#points-markers-and-tables"></a>
 </h3>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cities</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Washington"</span>, <span class="st">"New York"</span>, <span class="st">"Boston"</span><span class="op">)</span>,</span>
 <span>  longitude <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">77.0369</span>, <span class="op">-</span><span class="fl">74.0060</span>, <span class="op">-</span><span class="fl">71.0589</span><span class="op">)</span>,</span>
@@ -115,7 +115,7 @@
 <h3 id="choropleths">Choropleths<a class="anchor" aria-label="anchor" href="#choropleths"></a>
 </h3>
 <p><code><a href="reference/add_choropleth.html">add_choropleth()</a></code> classifies a numeric column and colors it from a named ramp, computing the same stops the application’s Style panel does.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/geolibre.html">geolibre</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/add_choropleth.html">add_choropleth</a></span><span class="op">(</span><span class="va">nc</span>, column <span class="op">=</span> <span class="st">"BIR74"</span>, colormap <span class="op">=</span> <span class="st">"blues"</span>, class_count <span class="op">=</span> <span class="fl">6</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/add_legend.html">add_legend</a></span><span class="op">(</span><span class="st">"Births"</span>, legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Low <span class="op">=</span> <span class="st">"#eff6ff"</span>, High <span class="op">=</span> <span class="st">"#1e3a8a"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -125,7 +125,7 @@
 <h3 id="rasters-tiles-and-services">Rasters, tiles, and services<a class="anchor" aria-label="anchor" href="#rasters-tiles-and-services"></a>
 </h3>
 <p>Remote Cloud Optimized GeoTIFFs are read directly by GeoLibre in the browser. The server must support CORS and HTTP range requests.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/geolibre.html">geolibre</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/add_raster.html">add_raster</a></span><span class="op">(</span><span class="st">"https://example.org/visual.tif"</span>, name <span class="op">=</span> <span class="st">"Satellite"</span>, bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/add_tile_layer.html">add_tile_layer</a></span><span class="op">(</span><span class="st">"https://tile.openstreetmap.org/{z}/{x}/{y}.png"</span>, name <span class="op">=</span> <span class="st">"OSM"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -133,13 +133,13 @@
 <span>  <span class="fu"><a href="reference/add_pmtiles.html">add_pmtiles</a></span><span class="op">(</span><span class="st">"https://example.org/buildings.pmtiles"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/add_3d_tiles.html">add_3d_tiles</a></span><span class="op">(</span><span class="st">"https://example.org/tileset.json"</span><span class="op">)</span></span></code></pre></div>
 <p><code><a href="reference/add_vector.html">add_vector()</a></code> hands a URL to the application’s in-browser vector control, so GeoParquet, FlatGeobuf, zipped Shapefiles, and GeoPackages stream without being inlined in the project. A local path is read with <code>sf</code> instead.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/geolibre.html">geolibre</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/add_geoparquet.html">add_geoparquet</a></span><span class="op">(</span><span class="st">"https://example.org/parcels.parquet"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="managing-layers">Managing layers<a class="anchor" aria-label="anchor" href="#managing-layers"></a>
 </h3>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">map</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/geolibre.html">geolibre</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/add_raster.html">add_raster</a></span><span class="op">(</span><span class="st">"https://example.org/before.tif"</span>, name <span class="op">=</span> <span class="st">"Before"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/add_raster.html">add_raster</a></span><span class="op">(</span><span class="st">"https://example.org/after.tif"</span>, name <span class="op">=</span> <span class="st">"After"</span><span class="op">)</span></span>
@@ -155,13 +155,13 @@
 <h3 id="standalone-html">Standalone HTML<a class="anchor" aria-label="anchor" href="#standalone-html"></a>
 </h3>
 <p><code><a href="reference/to_html.html">to_html()</a></code> writes a self-contained page that needs no running R session.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/to_html.html">to_html</a></span><span class="op">(</span><span class="va">map</span>, <span class="st">"map.html"</span>, title <span class="op">=</span> <span class="st">"Before and after"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="project-files">Project files<a class="anchor" aria-label="anchor" href="#project-files"></a>
 </h3>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">map</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/geolibre.html">geolibre</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/add_geojson.html">add_geojson</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/save_project.html">save_project</a></span><span class="op">(</span><span class="va">map</span>, <span class="st">"example.geolibre.json"</span><span class="op">)</span></span>
 <span></span>
@@ -172,7 +172,7 @@
 <div class="section level2">
 <h2 id="shiny">Shiny<a class="anchor" aria-label="anchor" href="#shiny"></a>
 </h2>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r.geolibre.app">geolibre</a></span><span class="op">)</span></span>
 <span></span>
@@ -219,7 +219,7 @@
 <h2 id="self-hosted-geolibre">Self-hosted GeoLibre<a class="anchor" aria-label="anchor" href="#self-hosted-geolibre"></a>
 </h2>
 <p>Use <code>app_url</code> per widget or set a session-wide option:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>geolibre.app_url <span class="op">=</span> <span class="st">"https://gis.example.org/"</span><span class="op">)</span></span></code></pre></div>
 <p>The deployment must expose the GeoLibre web app and support its <code>?embed=1</code> project bridge.</p>
 </div>
@@ -243,6 +243,7 @@
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
+<li><a href="https://cloud.r-project.org/package=geolibre" class="external-link">View on CRAN</a></li>
 <li><a href="https://github.com/opengeos/geolibre-r/" class="external-link">Browse source code</a></li>
 <li><a href="https://github.com/opengeos/geolibre-r/issues" class="external-link">Report a bug</a></li>
 </ul>

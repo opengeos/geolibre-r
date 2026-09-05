@@ -1,5 +1,9 @@
 # geolibre
 
+[![CRAN
+status](https://www.r-pkg.org/badges/version/geolibre)](https://CRAN.R-project.org/package=geolibre)
+[![CRAN
+downloads](https://cranlogs.r-pkg.org/badges/grand-total/geolibre)](https://CRAN.R-project.org/package=geolibre)
 [![R-CMD-check](https://github.com/opengeos/geolibre-r/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/opengeos/geolibre-r/actions/workflows/R-CMD-check.yaml)
 [![GeoLibre](https://img.shields.io/badge/GeoLibre-web-16a34a)](https://web.geolibre.app/)
 
@@ -13,12 +17,18 @@ the R widget directly in your browser.
 
 ## Installation
 
+Install the released version from
+[CRAN](https://CRAN.R-project.org/package=geolibre):
+
 ``` r
 
-# Once released on CRAN:
 install.packages("geolibre")
+```
 
-# Development version:
+Or the development version from GitHub:
+
+``` r
+
 install.packages("pak")
 pak::pak("opengeos/geolibre-r")
 ```

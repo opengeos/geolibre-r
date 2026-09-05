@@ -3,7 +3,7 @@ pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   articles/interactive-map: interactive-map.html
-last_built: 2026-08-23T01:50Z
+last_built: 2026-09-05T10:50Z
 urls:
   reference: https://r.geolibre.app/reference
   article: https://r.geolibre.app/articles

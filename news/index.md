@@ -2,10 +2,11 @@
 
 ## geolibre 0.2.0
 
-This release brings the R API to parity with the GeoLibre Python API.
-The package now covers every layer type the application reads, layer
-management, data-driven symbology, on-map controls, standalone HTML
-export, and a Shiny proxy that drives the live map.
+First CRAN release. This release brings the R API to parity with the
+GeoLibre Python API. The package now covers every layer type the
+application reads, layer management, data-driven symbology, on-map
+controls, standalone HTML export, and a Shiny proxy that drives the live
+map.
 
 ### New layer types
 
@@ -174,7 +175,7 @@ export, and a Shiny proxy that drives the live map.
 
 ## geolibre 0.1.0
 
-Initial CRAN release.
+Initial release, on GitHub only.
 
 - Add a responsive `htmlwidgets` interface to GeoLibre for RStudio,
   Quarto, R Markdown, and Shiny.
