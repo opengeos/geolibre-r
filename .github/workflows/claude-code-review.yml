@@ -203,7 +203,7 @@ jobs:
         # does not strand us on an old version. When it bumps, re-read the
         # action's release notes for changes to the scrub, MCP wiring, or the
         # `execution_file` contract that the summary step below parses.
-        uses: anthropics/claude-code-action@239e3a730883eeb5c53db12b0fc9573b3024b126 # v1 (Claude Code 2.1.220)
+        uses: anthropics/claude-code-action@fa2b2666b747000bf42767d1f332065b375e3c8f # v1 (Claude Code 2.1.220)
         with:
           # Use the workflow's GITHUB_TOKEN for GitHub API calls instead of the
           # default OIDC -> Claude GitHub App token exchange. That exchange
