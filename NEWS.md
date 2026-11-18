@@ -1,3 +1,10 @@
+# geolibre (development version)
+
+- Fix the Shiny proxy: `update_geolibre()` and every proxy command were silently
+  dropped because `geolibre.js` was loaded twice, once as the widget binding and
+  once as its own dependency, and the copy that installed the Shiny handlers
+  looked in the wrong instance registry (#23).
+
 # geolibre 0.2.0
 
 First CRAN release. This release brings the R API to parity with the GeoLibre

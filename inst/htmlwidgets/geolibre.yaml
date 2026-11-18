@@ -2,5 +2,6 @@ dependencies:
   - name: geolibre-widget
     version: 0.1.0
     src: htmlwidgets
-    script: geolibre.js
+    # htmlwidgets already loads geolibre.js as the binding; listing it here as
+    # well would run it twice (see opengeos/geolibre-r#23).
     stylesheet: geolibre.css

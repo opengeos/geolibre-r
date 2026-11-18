@@ -105,3 +105,15 @@ test_that("a video layer reports its source URL in a summary", {
   )
   expect_equal(get_layers(map)$source, "https://example.com/clip.mp4")
 })
+
+test_that("the widget script is loaded once, so Shiny proxy messages reach the map", {
+  # geolibre.js used to be listed as a dependency of itself. The second copy got
+  # its own instance registry, so the Shiny handlers never found the widget and
+  # every update_geolibre() and proxy command was dropped (geolibre-r#23).
+  deps <- htmlwidgets::getDependency("geolibre", "geolibre")
+  scripts <- unlist(lapply(deps, function(dep) dep$script))
+  expect_equal(sum(basename(scripts) == "geolibre.js"), 1L)
+
+  js <- readLines(system.file("htmlwidgets", "geolibre.js", package = "geolibre"))
+  expect_true(any(grepl("window.__geolibreInstances", js, fixed = TRUE)))
+})
