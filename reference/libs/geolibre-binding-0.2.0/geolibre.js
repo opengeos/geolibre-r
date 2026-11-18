@@ -1,7 +1,10 @@
 (function () {
   "use strict";
 
-  const instances = new Map();
+  // Shared on window so that the Shiny handlers, installed once per page, find
+  // every widget even if this script is ever loaded more than once.
+  const instances = window.__geolibreInstances ||
+    (window.__geolibreInstances = new Map());
 
   // Build the embed URL. `embed=1` turns on the project bridge the widget speaks;
   // `layout`, `theme`, and `panels` select the application chrome.

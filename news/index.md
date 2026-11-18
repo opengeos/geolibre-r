@@ -1,6 +1,18 @@
 # Changelog
 
+## geolibre (development version)
+
+- Fix the Shiny proxy:
+  [`update_geolibre()`](https://r.geolibre.app/reference/update_geolibre.md)
+  and every proxy command were silently dropped because `geolibre.js`
+  was loaded twice, once as the widget binding and once as its own
+  dependency, and the copy that installed the Shiny handlers looked in
+  the wrong instance registry
+  ([\#23](https://github.com/opengeos/geolibre-r/issues/23)).
+
 ## geolibre 0.2.0
+
+CRAN release: 2026-09-03
 
 First CRAN release. This release brings the R API to parity with the
 GeoLibre Python API. The package now covers every layer type the
